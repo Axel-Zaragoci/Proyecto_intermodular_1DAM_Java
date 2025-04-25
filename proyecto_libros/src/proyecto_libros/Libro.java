@@ -16,4 +16,52 @@ public class Libro {
 		this.paginas = paginas;
 		this.publicacion = publicacion;
 	}
+	
+	public void setTitulo(String titulo) {
+		this.titulo = titulo;
+	}
+	
+	public void setEditorial(String editorial) {
+		this.editorial = editorial;
+	}
+	
+	public void setAutor(String autor) {
+		this.autor = autor;
+	}
+	
+	public void setSaga(String saga) {
+		this.saga = saga;
+	}
+	
+	public void setPaginas(int paginas) {
+		this.paginas = paginas;
+	}
+	
+	public void setPublicacion(int publicacion) {
+		this.publicacion = publicacion;
+	}
+	
+	public String getTitulo() {
+		return this.titulo;
+	}
+	
+	public String getEditorial() {
+		return this.editorial;
+	}
+	
+	public String getAutor() {
+		return this.autor;
+	}
+	
+	public String getSaga() {
+		return this.saga;
+	}
+	
+	public int getPaginas() {
+		return this.paginas;
+	}
+	
+	public int getPublicacion() {
+		return this.publicacion;
+	}
 }
