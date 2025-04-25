@@ -1,0 +1,22 @@
+# Ignorar archivos de configuración de Eclipse en subcarpetas
+*/.classpath
+*/.project
+*/.settings/
+
+# Ignorar carpetas de compilación en subproyectos
+*/bin/
+*/target/
+*/build/
+
+# Archivos comunes de sistema y logs
+*.log
+.DS_Store
+Thumbs.db
+
+# Ignorar configuración de IDEs adicionales
+*/.idea/
+*.iml
+
+# Archivos de entorno
+.env
+/.metadata/
