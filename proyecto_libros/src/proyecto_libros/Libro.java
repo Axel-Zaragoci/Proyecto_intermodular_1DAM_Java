@@ -1,17 +1,23 @@
 package proyecto_libros;
 
+import java.util.ArrayList;
+
 public class Libro {
 	private String titulo;
-	private String editorial;
-	private String autor;
+	private ArrayList<String> editorial = new ArrayList<>();
+	private ArrayList<String> autor = new ArrayList<>();
 	private String saga;
 	private int paginas;
 	private int publicacion;
 	
-	public Libro(String titulo, String editorial, String autor, String saga, int paginas, int publicacion) {
+	public Libro(String titulo, String[] editorial, String[] autor, String saga, int paginas, int publicacion) {
 		this.titulo = titulo;
-		this.editorial = editorial;
-		this.autor = autor;
+		for(String e : editorial) {
+			this.editorial.add(e);
+		}
+		for(String a : autor) {
+			this.autor.add(a);
+		}
 		this.saga = saga;
 		this.paginas = paginas;
 		this.publicacion = publicacion;
@@ -19,14 +25,6 @@ public class Libro {
 	
 	public void setTitulo(String titulo) {
 		this.titulo = titulo;
-	}
-	
-	public void setEditorial(String editorial) {
-		this.editorial = editorial;
-	}
-	
-	public void setAutor(String autor) {
-		this.autor = autor;
 	}
 	
 	public void setSaga(String saga) {
@@ -43,14 +41,6 @@ public class Libro {
 	
 	public String getTitulo() {
 		return this.titulo;
-	}
-	
-	public String getEditorial() {
-		return this.editorial;
-	}
-	
-	public String getAutor() {
-		return this.autor;
 	}
 	
 	public String getSaga() {
