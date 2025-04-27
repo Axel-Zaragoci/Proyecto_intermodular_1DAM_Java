@@ -7,6 +7,14 @@ public class Autor {
 	private boolean vivo;
 	private String seudonimo;
 	
+	public Autor(String nombre, String fechaNacimiento, String nacionalidad, boolean vivo, String seudonimo) {
+		this.nombre = nombre;
+		this.fechaNacimiento = fechaNacimiento;
+		this.nacionalidad = nacionalidad;
+		this.vivo = vivo;
+		this.seudonimo = seudonimo;
+	}
+	
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
