@@ -8,6 +8,15 @@ public class Editorial {
 	private long telefono;
 	private String email;
 	
+	public Editorial(String nombre, String pais, String ciudad, int anoFundacion, long telefono, String email) {
+		this.nombre = nombre;
+		this.pais = pais;
+		this.ciudad = ciudad;
+		this.anoFundacion = anoFundacion;
+		this.telefono = telefono;
+		this.email = email;
+	}
+	
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
