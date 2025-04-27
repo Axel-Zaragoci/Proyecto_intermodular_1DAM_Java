@@ -6,11 +6,13 @@ public class Libro {
 	private String titulo;
 	private ArrayList<String> editorial = new ArrayList<>();
 	private ArrayList<String> autor = new ArrayList<>();
-	private String saga;
 	private int paginas;
 	private int publicacion;
+	private double precio;
+	private long isbn;
+	private String idioma;
 	
-	public Libro(String titulo, String[] editorial, String[] autor, String saga, int paginas, int publicacion) {
+	public Libro(String titulo, String[] editorial, String[] autor, String saga, int paginas, int publicacion, double precio, long isbn, String idioma) {
 		this.titulo = titulo;
 		for(String e : editorial) {
 			this.editorial.add(e);
@@ -18,17 +20,15 @@ public class Libro {
 		for(String a : autor) {
 			this.autor.add(a);
 		}
-		this.saga = saga;
 		this.paginas = paginas;
 		this.publicacion = publicacion;
+		this.precio = precio;
+		this.isbn = isbn;
+		this.idioma = idioma;
 	}
 	
 	public void setTitulo(String titulo) {
 		this.titulo = titulo;
-	}
-	
-	public void setSaga(String saga) {
-		this.saga = saga;
 	}
 	
 	public void setPaginas(int paginas) {
@@ -39,12 +39,20 @@ public class Libro {
 		this.publicacion = publicacion;
 	}
 	
-	public String getTitulo() {
-		return this.titulo;
+	public void setPrecio(double precio) {
+		this.precio = precio;
 	}
 	
-	public String getSaga() {
-		return this.saga;
+	public void setIsbn(long isbn) {
+		this.isbn = isbn;
+	}
+	
+	public void setIdioma(String idioma) {
+		this.idioma = idioma;
+	}
+	
+	public String getTitulo() {
+		return this.titulo;
 	}
 	
 	public int getPaginas() {
@@ -53,5 +61,17 @@ public class Libro {
 	
 	public int getPublicacion() {
 		return this.publicacion;
+	}
+	
+	public double getPrecio() {
+		return this.precio;
+	}
+	
+	public long getIsbn() {
+		return this.isbn;
+	}
+	
+	public String getIdioma() {
+		return this.idioma;
 	}
 }
