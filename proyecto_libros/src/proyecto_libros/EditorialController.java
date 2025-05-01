@@ -47,5 +47,25 @@ public class EditorialController {
 		}
 		return lista;
 	}
+	
+	public static void actualizar(Editorial editorialEditada) {
+		String sql = "UPDATE editorial SET nombre = ?, pais = ?, ciudad = ?, ano_fundacion = ?, telefono = ?, email = ? WHERE id = ?";
+		try (Connection con = Database.conectar();
+			 PreparedStatement stmt = con.prepareStatement(sql)) {
+			
+			stmt.setString(1, editorialEditada.getNombre());
+			stmt.setString(2, editorialEditada.getPais());
+			stmt.setString(3, editorialEditada.getCiudad());
+			stmt.setInt(4, editorialEditada.getAnoFunacion());
+			stmt.setLong(5, editorialEditada.getTelefono());
+			stmt.setString(6, editorialEditada.getEmail());
+			stmt.setInt(7, editorialEditada.getId());
+			stmt.executeUpdate();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 
 }
