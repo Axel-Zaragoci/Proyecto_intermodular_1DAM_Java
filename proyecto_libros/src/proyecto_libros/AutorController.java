@@ -8,9 +8,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 public class AutorController {
-	public static void main(String[] args) {
-	}
-	
 	public static void crear(Autor autor) {
 		String sql = "INSERT INTO autor (nombre, fecha_nacimiento, nacionalidad, estado, seudonimo) VALUES (?, ?, ?, ?, ?);";
 		try (Connection con = Database.conectar();
@@ -23,7 +20,6 @@ public class AutorController {
 			stmt.setObject(5, autor.getSeudonimo(), java.sql.Types.INTEGER);
 			
 			stmt.execute();
-			System.out.println("Autor añadido");
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -74,5 +70,16 @@ public class AutorController {
 		}
 	}
 	
-	
+	public static void eliminar(int id) {
+		String sql = "DELETE FROM autor WHERE id = ?";
+		try (Connection con = Database.conectar();
+			 PreparedStatement stmt = con.prepareStatement(sql);) {
+			
+			stmt.setInt(1, id);
+			stmt.executeUpdate();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }
