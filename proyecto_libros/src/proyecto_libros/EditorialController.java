@@ -2,7 +2,10 @@ package proyecto_libros;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 
 public class EditorialController {
 	public static void crear(Editorial editorial) {
@@ -24,4 +27,25 @@ public class EditorialController {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	public static ArrayList<Editorial> ver() {
+		ArrayList<Editorial> lista = new ArrayList<>();
+		String sql = "SELECT * FROM editorial";
+		
+		try (Connection con = Database.conectar();
+			 Statement stmt = con.createStatement();
+			 ResultSet rs = stmt.executeQuery(sql)) {
+			
+			while (rs.next()) {
+				Editorial editorial = new Editorial(rs.getInt("id"), rs.getString("nombre"), rs.getString("pais"), rs.getString("ciudad"), rs.getInt("ano_fundacion"), rs.getLong("telefono"), rs.getString("email"));
+				lista.add(editorial);
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return lista;
+	}
+
 }
