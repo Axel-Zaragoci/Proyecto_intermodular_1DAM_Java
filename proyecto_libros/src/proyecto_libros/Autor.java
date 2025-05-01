@@ -1,13 +1,23 @@
 package proyecto_libros;
 
 public class Autor {
+	private int id;
 	private String nombre;
 	private String fechaNacimiento;
 	private String nacionalidad;
 	private boolean vivo;
-	private String seudonimo;
+	private Integer seudonimo;
 	
-	public Autor(String nombre, String fechaNacimiento, String nacionalidad, boolean vivo, String seudonimo) {
+	public Autor(String nombre, String fechaNacimiento, String nacionalidad, boolean vivo, Integer seudonimo) {
+		this.nombre = nombre;
+		this.fechaNacimiento = fechaNacimiento;
+		this.nacionalidad = nacionalidad;
+		this.vivo = vivo;
+		this.seudonimo = seudonimo;
+	}
+	
+	public Autor(int id, String nombre, String fechaNacimiento, String nacionalidad, boolean vivo, Integer seudonimo) {
+		this.id = id;
 		this.nombre = nombre;
 		this.fechaNacimiento = fechaNacimiento;
 		this.nacionalidad = nacionalidad;
@@ -31,7 +41,7 @@ public class Autor {
 		this.vivo = vivo;
 	}
 	
-	public void setSeudonimo(String seudonimo) {
+	public void setSeudonimo(Integer seudonimo) {
 		this.seudonimo = seudonimo;
 	}
 	
@@ -51,7 +61,11 @@ public class Autor {
 		return this.vivo;
 	}
 	
-	public String getSeudonimo() {
+	public Integer getSeudonimo() {
 		return this.seudonimo;
+	}
+	
+	public int getId() {
+		return this.id;
 	}
 }

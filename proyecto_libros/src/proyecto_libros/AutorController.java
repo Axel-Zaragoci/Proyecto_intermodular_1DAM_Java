@@ -7,7 +7,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-public class AutorController {	
+public class AutorController {
+	public static void main(String[] args) {
+	}
 	
 	public static void crear(Autor autor) {
 		String sql = "INSERT INTO autor (nombre, fecha_nacimiento, nacionalidad, estado, seudonimo) VALUES (?, ?, ?, ?, ?);";
@@ -15,10 +17,10 @@ public class AutorController {
 			 PreparedStatement stmt = con.prepareStatement(sql)) {
 			
 			stmt.setString(1, autor.getNombre());
-			stmt.setDate(2, java.sql.Date.valueOf("1964-06-05"));
+			stmt.setDate(2, java.sql.Date.valueOf(autor.getFechaNacimiento()));
 			stmt.setString(3, autor.getNacionalidad());
 			stmt.setString(4, autor.isVivo()?"Vivo":"Fallecido");
-			stmt.setString(5, autor.getSeudonimo());
+			stmt.setObject(5, autor.getSeudonimo(), java.sql.Types.INTEGER);
 			
 			stmt.execute();
 			System.out.println("Autor añadido");
@@ -44,7 +46,7 @@ public class AutorController {
 				else {
 					vivo = false;
 				}
-				Autor autor = new Autor(rs.getString("nombre"), rs.getString("fecha_nacimiento"), rs.getString("nacionalidad"), vivo, rs.getString("seudonimo"));
+				Autor autor = new Autor(rs.getInt("id"), rs.getString("nombre"), rs.getString("fecha_nacimiento"), rs.getString("nacionalidad"), vivo, rs.getInt("seudonimo"));
 				lista.add(autor);
 			}
 		}
@@ -52,6 +54,24 @@ public class AutorController {
 			e.printStackTrace();
 		}
 		return lista;
+	}
+	
+	public static void actualizar(Autor autorEditado) {
+		String sql = "UPDATE autor SET nombre = ?, fecha_nacimiento = ?, nacionalidad = ?, estado = ?, seudonimo = ? WHERE id = ?";
+		try (Connection con = Database.conectar();
+			 PreparedStatement stmt = con.prepareStatement(sql)) {
+			
+			stmt.setString(1, autorEditado.getNombre());
+			stmt.setDate(2, java.sql.Date.valueOf(autorEditado.getFechaNacimiento()));
+			stmt.setString(3, autorEditado.getNacionalidad());
+			stmt.setString(4, autorEditado.isVivo()?"Vivo":"Fallecido");
+			stmt.setObject(5, autorEditado.getSeudonimo(), java.sql.Types.INTEGER);
+			stmt.setInt(6, autorEditado.getId());			
+			stmt.executeUpdate();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	
