@@ -1,6 +1,7 @@
 package proyecto_libros;
 
 public class Editorial {
+	private int id;
 	private String nombre;
 	private String pais;
 	private String ciudad;
@@ -9,6 +10,16 @@ public class Editorial {
 	private String email;
 	
 	public Editorial(String nombre, String pais, String ciudad, int anoFundacion, long telefono, String email) {
+		this.nombre = nombre;
+		this.pais = pais;
+		this.ciudad = ciudad;
+		this.anoFundacion = anoFundacion;
+		this.telefono = telefono;
+		this.email = email;
+	}
+	
+	public Editorial(int id, String nombre, String pais, String ciudad, int anoFundacion, long telefono, String email) {
+		this.id = id;
 		this.nombre = nombre;
 		this.pais = pais;
 		this.ciudad = ciudad;
@@ -63,5 +74,9 @@ public class Editorial {
 	
 	public String getEmail() {
 		return this.email;
+	}
+	
+	public int getId() {
+		return this.id;
 	}
 }
