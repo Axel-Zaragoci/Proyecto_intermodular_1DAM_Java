@@ -16,7 +16,7 @@ public class Libro {
 	private long isbn;
 	private String idioma;
 	
-	public Libro(String titulo, int editorial, Integer[] autor, String saga, int paginas, int publicacion, double precio, long isbn, String idioma) {
+	public Libro(String titulo, int editorial, Integer[] autor, int paginas, int publicacion, double precio, long isbn, String idioma) {
 		this.titulo = titulo;
 		this.editorial = editorial;
 		for(Integer a : autor) {
