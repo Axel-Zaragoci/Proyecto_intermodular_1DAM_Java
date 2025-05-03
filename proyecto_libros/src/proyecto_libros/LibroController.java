@@ -70,30 +70,107 @@ public class LibroController {
 		con.close();
 	}
 	
-	public static ArrayList<Libro> ver() throws SQLException {
+	public static ArrayList<Libro> ver() {
 		ArrayList<Libro> libros = new ArrayList<>();
-		Connection con = Database.conectar();
-		String sqlLibro = "SELECT l.id, l.titulo, e.editorial, l.paginas, l.ano_publicacion, e.precio, e.isbn, e.idioma FROM libro l, editar e WHERE l.id = e.libro";
-		PreparedStatement stmtLibro = con.prepareStatement(sqlLibro);
-		ResultSet rs = stmtLibro.executeQuery();
-		
-		while (rs.next()) {
-			int libroID = rs.getInt("id");
+		try {
+			Connection con = Database.conectar();
+			String sqlLibro = "SELECT l.id, l.titulo, e.editorial, l.paginas, l.ano_publicacion, e.precio, e.isbn, e.idioma FROM libro l, editar e WHERE l.id = e.libro";
+			PreparedStatement stmtLibro = con.prepareStatement(sqlLibro);
+			ResultSet rs = stmtLibro.executeQuery();
 			
-			String sqlAutor = "SELECT autor FROM escribir WHERE libro = ?";
-			PreparedStatement stmtAutor = con.prepareStatement(sqlAutor);
-			stmtAutor.setInt(1, libroID);
-			ResultSet rsAutores = stmtAutor.executeQuery();
-			
-			ArrayList<Integer> autores = new ArrayList<>();
-			while(rsAutores.next()) {
-				autores.add(rsAutores.getInt("autor"));
+			while (rs.next()) {
+				int libroID = rs.getInt("id");
+				
+				String sqlAutor = "SELECT autor FROM escribir WHERE libro = ?";
+				PreparedStatement stmtAutor = con.prepareStatement(sqlAutor);
+				stmtAutor.setInt(1, libroID);
+				ResultSet rsAutores = stmtAutor.executeQuery();
+				
+				ArrayList<Integer> autores = new ArrayList<>();
+				while(rsAutores.next()) {
+					autores.add(rsAutores.getInt("autor"));
+				}
+				
+				Libro libro = new Libro(libroID, rs.getString("titulo"), rs.getInt("editorial"), rs.getInt("paginas"), rs.getInt("ano_publicacion"), rs.getDouble("precio"), rs.getLong("isbn"), rs.getString("idioma"));
+				libro.setAutor(autores);
+				libros.add(libro);
 			}
-			
-			Libro libro = new Libro(libroID, rs.getString("titulo"), rs.getInt("editorial"), rs.getInt("paginas"), rs.getInt("ano_publicacion"), rs.getDouble("precio"), rs.getLong("isbn"), rs.getString("idioma"));
-			libro.setAutor(autores);
-			libros.add(libro);
+		} catch (SQLException ex) {
+			ex.printStackTrace();
 		}
 		return libros;
+	}
+	
+	public void actualizarLibro(Libro libro) throws SQLException {
+	    Connection con = Database.conectar();
+	    try {
+	        con.setAutoCommit(false);
+
+	        String sqlLibro = "UPDATE libro SET titulo = ?, paginas = ? WHERE id = ?";
+	        PreparedStatement stmtLibro = con.prepareStatement(sqlLibro);
+	        stmtLibro.setString(1, libro.getTitulo());
+	        stmtLibro.setInt(2, libro.getPaginas());
+	        stmtLibro.setInt(3, libro.getId());
+	        stmtLibro.executeUpdate();
+
+	        String sqlEditar = "UPDATE editar SET editorial = ?, precio = ?, isbn = ?, idioma = ? WHERE libro = ? ";
+	        PreparedStatement stmtEditar = con.prepareStatement(sqlEditar);
+	        stmtEditar.setInt(1, libro.getEditorial());
+	        stmtEditar.setDouble(2, libro.getPrecio());
+	        stmtEditar.setLong(3, libro.getIsbn());
+	        stmtEditar.setString(4, libro.getIdioma());
+	        stmtEditar.setInt(5, libro.getId());
+	        stmtEditar.executeUpdate();
+
+	        PreparedStatement stmtDeleteAutores = con.prepareStatement("DELETE FROM escribir WHERE libro = ?");
+	        stmtDeleteAutores.setInt(1, libro.getId());
+	        stmtDeleteAutores.executeUpdate();
+
+	        String sqlEscribir = "INSERT INTO escribir (libro, autor) VALUES (?, ?)";
+	        PreparedStatement stmtEscribir = con.prepareStatement(sqlEscribir);
+	        for (int autorId : libro.getAutor()) {
+	            stmtEscribir.setInt(1, libro.getId());
+	            stmtEscribir.setInt(2, autorId);
+	            stmtEscribir.addBatch();
+	        }
+	        stmtEscribir.executeBatch();
+
+	        con.commit();
+	    } catch (SQLException e) {
+	        con.rollback();
+	        throw e;
+	    }
+        con.setAutoCommit(true);
+        con.close();
+	}
+
+	public static void eliminar(int id) throws SQLException {
+		Connection con = Database.conectar();
+		try {
+			con.setAutoCommit(false);
+			
+			String sqlAutor = "DELETE FROM escribir WHERE libro = ?";
+			PreparedStatement stmtAutor = con.prepareStatement(sqlAutor);
+			stmtAutor.setInt(1, id);
+			stmtAutor.executeUpdate();
+			
+			String sqlEditar = "DELETE FROM editar WHERE libro = ?";
+			PreparedStatement stmtEditar = con.prepareStatement(sqlEditar);
+			stmtEditar.setInt(1, id);
+			stmtEditar.executeUpdate();
+			
+			String sqlLibro = "DELETE FROM libro WHERE id = ?";
+			PreparedStatement stmtLibro = con.prepareStatement(sqlLibro);
+			stmtLibro.setInt(1, id);
+			stmtLibro.executeUpdate();
+			
+			con.commit();
+		}
+		catch (SQLException ex) {
+			con.rollback();
+			ex.printStackTrace();
+		}
+		con.setAutoCommit(true);
+		con.close();
 	}
 }
