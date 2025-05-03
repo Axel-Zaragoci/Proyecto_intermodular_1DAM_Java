@@ -7,6 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Libro {
+	private int id;
 	private String titulo;
 	private int editorial;
 	private ArrayList<Integer> autor = new ArrayList<>();
@@ -28,4 +29,17 @@ public class Libro {
 		this.isbn = isbn;
 		this.idioma = idioma;
 	}
+	
+	public Libro(int id, String titulo, int editorial, int paginas, int publicacion, double precio, long isbn, String idioma) {
+		this.id = id;
+		this.titulo = titulo;
+		this.editorial = editorial;
+		this.paginas = paginas;
+		this.publicacion = publicacion;
+		this.precio = precio;
+		this.isbn = isbn;
+		this.idioma = idioma;
+	}
 }
+
+

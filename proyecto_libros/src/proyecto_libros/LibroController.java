@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class LibroController {
 	
@@ -67,5 +68,32 @@ public class LibroController {
 		}
 		con.setAutoCommit(true);
 		con.close();
+	}
+	
+	public static ArrayList<Libro> ver() throws SQLException {
+		ArrayList<Libro> libros = new ArrayList<>();
+		Connection con = Database.conectar();
+		String sqlLibro = "SELECT l.id, l.titulo, e.editorial, l.paginas, l.ano_publicacion, e.precio, e.isbn, e.idioma FROM libro l, editar e WHERE l.id = e.libro";
+		PreparedStatement stmtLibro = con.prepareStatement(sqlLibro);
+		ResultSet rs = stmtLibro.executeQuery();
+		
+		while (rs.next()) {
+			int libroID = rs.getInt("id");
+			
+			String sqlAutor = "SELECT autor FROM escribir WHERE libro = ?";
+			PreparedStatement stmtAutor = con.prepareStatement(sqlAutor);
+			stmtAutor.setInt(1, libroID);
+			ResultSet rsAutores = stmtAutor.executeQuery();
+			
+			ArrayList<Integer> autores = new ArrayList<>();
+			while(rsAutores.next()) {
+				autores.add(rsAutores.getInt("autor"));
+			}
+			
+			Libro libro = new Libro(libroID, rs.getString("titulo"), rs.getInt("editorial"), rs.getInt("paginas"), rs.getInt("ano_publicacion"), rs.getDouble("precio"), rs.getLong("isbn"), rs.getString("idioma"));
+			libro.setAutor(autores);
+			libros.add(libro);
+		}
+		return libros;
 	}
 }
