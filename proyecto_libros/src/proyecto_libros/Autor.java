@@ -1,13 +1,19 @@
 package proyecto_libros;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class Autor {
+	private int id;
 	private String nombre;
 	private String fechaNacimiento;
 	private String nacionalidad;
 	private boolean vivo;
-	private String seudonimo;
+	private Integer seudonimo;
 	
-	public Autor(String nombre, String fechaNacimiento, String nacionalidad, boolean vivo, String seudonimo) {
+	public Autor(String nombre, String fechaNacimiento, String nacionalidad, boolean vivo, Integer seudonimo) {
 		this.nombre = nombre;
 		this.fechaNacimiento = fechaNacimiento;
 		this.nacionalidad = nacionalidad;
@@ -15,43 +21,12 @@ public class Autor {
 		this.seudonimo = seudonimo;
 	}
 	
-	public void setNombre(String nombre) {
+	public Autor(int id, String nombre, String fechaNacimiento, String nacionalidad, boolean vivo, Integer seudonimo) {
+		this.id = id;
 		this.nombre = nombre;
-	}
-	
-	public void setFechaNacimiento(String fecha) {
-		this.fechaNacimiento = fecha;
-	}
-	
-	public void setNacionalidad(String nacionalidad) {
+		this.fechaNacimiento = fechaNacimiento;
 		this.nacionalidad = nacionalidad;
-	}
-	
-	public void setVivo(boolean vivo) {
 		this.vivo = vivo;
-	}
-	
-	public void setSeudonimo(String seudonimo) {
 		this.seudonimo = seudonimo;
-	}
-	
-	public String getNombre() {
-		return this.nombre;
-	}
-	
-	public String getFechaNacimiento() {
-		return this.fechaNacimiento;
-	}
-	
-	public String getNacionalidad() {
-		return this.nacionalidad;
-	}
-	
-	public boolean isVivo() {
-		return this.vivo;
-	}
-	
-	public String getSeudonimo() {
-		return this.seudonimo;
 	}
 }
