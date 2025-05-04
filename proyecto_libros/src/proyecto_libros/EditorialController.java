@@ -19,7 +19,7 @@ public class EditorialController {
 			stmt.setLong(3, editorial.getTelefono());
 			stmt.setString(4, editorial.getEmail());
 			stmt.setString(5, editorial.getCiudad());;
-			stmt.setInt(6, editorial.getAnoFunacion());
+			stmt.setInt(6, editorial.getAnoFundacion());
 			
 			stmt.execute();
 		}
@@ -38,7 +38,7 @@ public class EditorialController {
 			 ResultSet rs = stmt.executeQuery(sql)) {
 			
 			while (rs.next()) {
-				Editorial editorial = new Editorial(rs.getInt("id"), rs.getString("nombre"), rs.getString("pais"), rs.getString("ciudad"), rs.getInt("ano_fundacion"), rs.getLong("telefono"), rs.getString("email"));
+				Editorial editorial = new Editorial(rs.getInt("id"), rs.getString("nombre"), rs.getString("pais"), rs.getString("ciudad"), rs.getInt("ano_fundacion"), rs.getInt("telefono"), rs.getString("email"));
 				lista.add(editorial);
 			}
 		}
@@ -56,7 +56,7 @@ public class EditorialController {
 			stmt.setString(1, editorialEditada.getNombre());
 			stmt.setString(2, editorialEditada.getPais());
 			stmt.setString(3, editorialEditada.getCiudad());
-			stmt.setInt(4, editorialEditada.getAnoFunacion());
+			stmt.setInt(4, editorialEditada.getAnoFundacion());
 			stmt.setLong(5, editorialEditada.getTelefono());
 			stmt.setString(6, editorialEditada.getEmail());
 			stmt.setInt(7, editorialEditada.getId());

@@ -11,13 +11,13 @@ public class Libro {
 	private String titulo;
 	private int editorial;
 	private ArrayList<Integer> autor = new ArrayList<>();
-	private int paginas;
-	private int publicacion;
+	private Integer paginas;
+	private Integer publicacion;
 	private double precio;
 	private long isbn;
 	private String idioma;
 	
-	public Libro(String titulo, int editorial, Integer[] autor, int paginas, int publicacion, double precio, long isbn, String idioma) {
+	public Libro(String titulo, int editorial, Integer[] autor, Integer paginas, Integer publicacion, double precio, long isbn, String idioma) {
 		this.titulo = titulo;
 		this.editorial = editorial;
 		for(Integer a : autor) {
@@ -30,7 +30,7 @@ public class Libro {
 		this.idioma = idioma;
 	}
 	
-	public Libro(int id, String titulo, int editorial, int paginas, int publicacion, double precio, long isbn, String idioma) {
+	public Libro(int id, String titulo, int editorial, Integer paginas, Integer publicacion, double precio, long isbn, String idioma) {
 		this.id = id;
 		this.titulo = titulo;
 		this.editorial = editorial;

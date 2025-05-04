@@ -1,15 +1,20 @@
 package proyecto_libros;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class Editorial {
 	private int id;
 	private String nombre;
 	private String pais;
 	private String ciudad;
-	private int anoFundacion;
-	private long telefono;
+	private Integer anoFundacion;
+	private Integer telefono;
 	private String email;
 	
-	public Editorial(String nombre, String pais, String ciudad, int anoFundacion, long telefono, String email) {
+	public Editorial(String nombre, String pais, String ciudad, Integer anoFundacion, Integer telefono, String email) {
 		this.nombre = nombre;
 		this.pais = pais;
 		this.ciudad = ciudad;
@@ -18,7 +23,7 @@ public class Editorial {
 		this.email = email;
 	}
 	
-	public Editorial(int id, String nombre, String pais, String ciudad, int anoFundacion, long telefono, String email) {
+	public Editorial(int id, String nombre, String pais, String ciudad, Integer anoFundacion, Integer telefono, String email) {
 		this.id = id;
 		this.nombre = nombre;
 		this.pais = pais;
@@ -26,57 +31,5 @@ public class Editorial {
 		this.anoFundacion = anoFundacion;
 		this.telefono = telefono;
 		this.email = email;
-	}
-	
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
-	
-	public void setPais(String pais) {
-		this.pais = pais;
-	}
-	
-	public void setCiudad(String ciudad) {
-		this.ciudad = ciudad;
-	}
-	
-	public void setAnoFundacion(int fundacion) {
-		this.anoFundacion = fundacion;
-	}
-	
-	public void setTelefono(long telefono) {
-		this.telefono = telefono;
-	}
-	
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	
-	public String getNombre() {
-		return this.nombre;
-	}
-	
-	public String getPais() {
-		return this.pais;
-	}
-	
-	public String getCiudad() {
-		return this.ciudad;
-	}
-	
-	public int getAnoFunacion() {
-		return this.anoFundacion;
-	}
-	
-	public long getTelefono() {
-		return this.telefono;
-	}
-	
-	public String getEmail() {
-		return this.email;
-	}
-	
-	public int getId() {
-		return this.id;
 	}
 }
