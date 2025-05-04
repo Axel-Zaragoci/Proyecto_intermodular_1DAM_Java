@@ -71,7 +71,7 @@ public class VentanaPrincipal extends JFrame {
 		panel.add(EditorialButton);
 		EditorialButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				VentanaEditorial v = new VentanaEditorial();
+				VentanaEditoriales v = new VentanaEditoriales();
 				Navegador.agregarVentanas(v);
 				Navegador.dispatcher("Editoriales", true);
 				Navegador.dispatcher("Menu", false);
