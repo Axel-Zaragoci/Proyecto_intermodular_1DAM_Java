@@ -8,7 +8,7 @@ import javax.swing.JOptionPane;
 public class Navegador {
 	private static ArrayList<JFrame> ventanas = new ArrayList<>();
 	
-	public static void argegarVentanas(JFrame v) {
+	public static void agregarVentanas(JFrame v) {
 		if(!ventanas.contains(v)) {
 			ventanas.add(v);
 		}
