@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.swing.JFrame;
+
 public class Database {
 	private static String url = "jdbc:postgresql://localhost:5432/Proyecto";
     private static String usuario = "postgres";
@@ -20,17 +22,17 @@ public class Database {
 		}
     }
     
-    public static boolean revisarLibro(Libro libro) {
+    public static boolean revisarLibro(Libro libro, JFrame ventana) {
     	if (libro.getTitulo() == null || libro.getTitulo().length() > 75) {
-    		Navegador.mostrarMensajeError(Navegador.obtenerVentana("Crear libro"), "Error", "El titulo no puede estar vacío ni tener más de 75 caracteres. Ahora mismo tiene " + libro.getTitulo().length());
+    		Navegador.mostrarMensajeError(ventana, "Error", "El titulo no puede estar vacío ni tener más de 75 caracteres. Ahora mismo tiene " + libro.getTitulo().length());
     		return false;
     	}
     	if (libro.getPaginas() < 0 || libro.getPaginas() > 9999) {
-    		Navegador.mostrarMensajeError(Navegador.obtenerVentana("Crear libro"), "Error", "El libro debe de tener más de 0 páginas y menos de 9999 páginas");
+    		Navegador.mostrarMensajeError(ventana, "Error", "El libro debe de tener más de 0 páginas y menos de 9999 páginas");
     		return false;
     	}
     	if (libro.getPublicacion() > 9999) {
-    		Navegador.mostrarMensajeError(Navegador.obtenerVentana("Crear libro"), "Error", "El libro debe de tener un año de publicación válido");
+    		Navegador.mostrarMensajeError(ventana, "Error", "El libro debe de tener un año de publicación válido");
     		return false;
     	}
     	String sqlAutorID = "SELECT MAX(id) AS id FROM autor";
@@ -38,14 +40,14 @@ public class Database {
 			 PreparedStatement stmtAutorID = con.prepareStatement(sqlAutorID)) {
 			ResultSet rsAutorID = stmtAutorID.executeQuery();
 			if (libro.getAutor() == null || libro.getAutor().size() == 0) {
-				Navegador.mostrarMensajeError(Navegador.obtenerVentana("Crear libro"), "Error", "El libro debe de tener al menos un autor");
+				Navegador.mostrarMensajeError(ventana, "Error", "El libro debe de tener al menos un autor");
 				return false;
 			}
 			else {
 				while(rsAutorID.next()) {
 					for (Integer autor : libro.getAutor()) {
 						if (autor < 1 || autor > rsAutorID.getInt("id")) {
-							Navegador.mostrarMensajeError(Navegador.obtenerVentana("Crear libro"), "Error", "El autor indicado no existe. Indica uno existente o crea un nuevo autor antes de añadir el libro");
+							Navegador.mostrarMensajeError(ventana, "Error", "El autor indicado no existe. Indica uno existente o crea un nuevo autor antes de añadir el libro");
 							return false;
 						}
 				}
@@ -62,7 +64,7 @@ public class Database {
 			ResultSet rsEditorialID = stmtEditorialID.executeQuery();
 			while (rsEditorialID.next()) {
 				if (libro.getEditorial() < 1 || libro.getEditorial() > rsEditorialID.getInt("id")) {
-					Navegador.mostrarMensajeError(Navegador.obtenerVentana("Crear libro"), "Error", "La editorial indicada no existe. Indica una editorial existente o crea una editorial antes de añadir el libro");
+					Navegador.mostrarMensajeError(ventana, "Error", "La editorial indicada no existe. Indica una editorial existente o crea una editorial antes de añadir el libro");
 					return false;
 				}
 			}
@@ -72,20 +74,60 @@ public class Database {
 		}
 		
 		if (libro.getPrecio() < 0 || libro.getPrecio() > 10000) {
-			Navegador.mostrarMensajeError(Navegador.obtenerVentana("Crear libro"), "Error", "El precio debe de ser mayor de 0 y menor que 10000");
+			Navegador.mostrarMensajeError(ventana, "Error", "El precio debe de ser mayor de 0 y menor que 10000");
 			return false;
 		}
 		
 		String isbn = libro.getIsbn() + "";
 		if (isbn.length() != 9 && isbn.length() != 10 && isbn.length() != 13) {
-			Navegador.mostrarMensajeError(Navegador.obtenerVentana("Crear libro"), "Error", "El ISBN es invalido. Si tiene una letra debes quitarla");
+			Navegador.mostrarMensajeError(ventana, "Error", "El ISBN es invalido. Si tiene una letra debes quitarla");
 			return false;
 		}
 		
 		if (libro.getIdioma() == null || libro.getIdioma().length() > 4) {
-			Navegador.mostrarMensajeError(Navegador.obtenerVentana("Crear libro"), "Error", "El idioma debe de ser un código de hasta 3 letras");
+			Navegador.mostrarMensajeError(ventana, "Error", "El idioma debe de ser un código de hasta 3 letras");
 		}
     	return true;
     }
+
+    public static boolean revisarAutor(Autor autor, JFrame ventana) {
+    	if(autor.getNombre().length() > 50 || autor.getNombre().length() < 0) {
+    		Navegador.mostrarMensajeError(ventana, "Error", "El autor debe de tener un nombre. El nombre debe ser de máximo 50 caracteres. Actualmente tiene " + autor.getNombre().length());
+    		return false;
+    	}
+    	try {
+    		java.sql.Date.valueOf(autor.getFechaNacimiento());
+    	}
+    	catch (Exception ex) {
+    		Navegador.mostrarMensajeError(ventana, "Error", "La fecha de nacimiento es inválida");
+    		ex.printStackTrace();
+    		return false;
+    	}
+    	
+    	if(autor.getNacionalidad().length() > 5 || autor.getNacionalidad().length() < 0) {
+    		Navegador.mostrarMensajeError(ventana, "Error", "El autor debe de tener una nacionalidad. Esta se muestra mediante un código de hasta 4 letras");
+    		return false;
+    	}
+    	
+    	if(autor.getSeudonimo() != null) {
+        	String sqlAutorID = "SELECT MAX(id) AS id FROM autor";
+    		try (Connection con = Database.conectar();
+    			 PreparedStatement stmtAutorID = con.prepareStatement(sqlAutorID)) {
+    			ResultSet rsAutorID = stmtAutorID.executeQuery();
+    			while (rsAutorID.next()) {
+    				if (autor.getSeudonimo() < 1 || autor.getSeudonimo() > rsAutorID.getInt("id")) {
+    					Navegador.mostrarMensajeError(ventana, "Error", "Error. Debes añadir un autor válido para el pseudónimo");
+    					return false;
+    				}
+    			}
+    		}
+    		catch (SQLException e) {
+    			e.printStackTrace();
+    		}
+    	}
+    	
+    	return true;
+    }
+
 
 }
