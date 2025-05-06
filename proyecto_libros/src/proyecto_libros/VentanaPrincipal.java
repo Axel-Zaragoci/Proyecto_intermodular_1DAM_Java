@@ -60,6 +60,7 @@ public class VentanaPrincipal extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				VentanaAutores v = new VentanaAutores();
 				Navegador.agregarVentanas(v);
+				v.actualizarTabla();
 				Navegador.dispatcher("Autores", true);
 				Navegador.dispatcher("Menu", false);
 			}

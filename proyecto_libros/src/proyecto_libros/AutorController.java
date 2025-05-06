@@ -24,6 +24,7 @@ public class AutorController {
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
+		Autor.actualizarLista();
 	}
 	
 	public static ArrayList<Autor> ver() {
@@ -68,18 +69,33 @@ public class AutorController {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
+		Autor.actualizarLista();
 	}
 	
-	public static void eliminar(int id) {
+	public static boolean eliminar(int id) {
+		String sqlEscribir = "DELETE FROM escribir WHERE autor = ?";
+		try (Connection con = Database.conectar();
+			 PreparedStatement stmtEscribir = con.prepareStatement(sqlEscribir)) {
+			
+			stmtEscribir.setInt(1, id);
+			stmtEscribir.executeUpdate();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 		String sql = "DELETE FROM autor WHERE id = ?";
 		try (Connection con = Database.conectar();
 			 PreparedStatement stmt = con.prepareStatement(sql);) {
 			
 			stmt.setInt(1, id);
 			stmt.executeUpdate();
+			((VentanaAutores) Navegador.obtenerVentana("Autores")).actualizarTabla();
+			return true;
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
+		return false;
 	}
 }
