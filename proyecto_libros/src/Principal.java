@@ -8,5 +8,4 @@ public class Principal {
 		Navegador.agregarVentanas(v);
 		Navegador.dispatcher("Menu", true);
 	}
-
 }
