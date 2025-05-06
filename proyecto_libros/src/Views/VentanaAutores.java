@@ -1,4 +1,4 @@
-package proyecto_libros;
+package Views;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -12,6 +12,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+
+import Controllers.AutorController;
+import Models.Autor;
+import Models.Navegador;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 

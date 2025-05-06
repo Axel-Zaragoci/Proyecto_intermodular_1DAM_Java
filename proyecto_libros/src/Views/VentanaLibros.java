@@ -1,4 +1,4 @@
-package proyecto_libros;
+package Views;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;

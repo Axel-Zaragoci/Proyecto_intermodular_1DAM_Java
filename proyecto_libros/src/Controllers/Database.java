@@ -1,4 +1,4 @@
-package proyecto_libros;
+package Controllers;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -10,14 +10,16 @@ import java.util.regex.Pattern;
 
 import javax.swing.JFrame;
 
+import Models.Autor;
+import Models.Editorial;
+import Models.Libro;
+import Models.Navegador;
+import Config.config;
+
 public class Database {
-	private static String url = "jdbc:postgresql://localhost:5432/Proyecto";
-    private static String usuario = "postgres";
-    private static String contraseña = "1234";
-    
     public static Connection conectar() {
     	try {
-			return DriverManager.getConnection(url, usuario, contraseña);
+			return DriverManager.getConnection(config.getUrl(), config.getUsuario(), config.getContraseña());
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;

@@ -1,4 +1,4 @@
-package proyecto_libros;
+package Controllers;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+
+import Models.Editorial;
 
 public class EditorialController {
 	public static void crear(Editorial editorial) {

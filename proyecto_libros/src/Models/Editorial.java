@@ -1,4 +1,4 @@
-package proyecto_libros;
+package Models;
 
 import lombok.Getter;
 import lombok.Setter;
