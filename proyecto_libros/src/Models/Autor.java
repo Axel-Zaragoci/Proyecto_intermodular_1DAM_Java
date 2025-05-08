@@ -1,6 +1,7 @@
 package Models;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import Controllers.AutorController;
 import lombok.Getter;
@@ -34,6 +35,10 @@ public class Autor {
 		this.seudonimo = seudonimo;
 	}
 	
+	public static Autor obtenerAutor(int id) {
+		return autores.get(id);
+	}
+	
 	public static String obtenerVida(boolean v) {
 		return v ? "Vivo" : "Fallecido";
 	}
@@ -49,6 +54,7 @@ public class Autor {
 	
 	public static ArrayList<Autor> actualizarLista() {
 		autores = AutorController.ver();
+		autores.sort(Comparator.comparing(Autor::getId));
 		return autores;
 	}
 }
