@@ -10,15 +10,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import Controllers.AutorController;
 import Models.Autor;
-import Models.Navegador;
+import Controllers.Navegador;
 
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class VentanaAutores extends JFrame {
 
@@ -43,12 +42,11 @@ public class VentanaAutores extends JFrame {
 		panel.setLayout(null);
 		
 		JButton createButton = new JButton("Crear autor");
-		createButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		createButton.addActionListener(e -> {
 				Navegador.agregarVentanas(new VentanaAutoresCrear());
 				Navegador.dispatcher("Crear autor", true);
 				Navegador.dispatcher(getTitle(), false);
-			}
+				((VentanaAutoresCrear) Navegador.obtenerVentana("Crear autor")).actualizarLista();
 		});
 		createButton.setBounds(10, 11, 117, 23);
 		panel.add(createButton);
@@ -56,21 +54,17 @@ public class VentanaAutores extends JFrame {
 		JButton deleteButton = new JButton("Eliminar autor");
 		deleteButton.setBounds(292, 11, 117, 23);
 		panel.add(deleteButton);
-		deleteButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		deleteButton.addActionListener(e -> {
 				VentanaAutores.this.eliminarAutor();
-			}
 		});
 		
 		JButton updateButton = new JButton("Editar autor");
 		updateButton.setBounds(150, 11, 117, 23);
 		panel.add(updateButton);
-		updateButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		updateButton.addActionListener(e -> {
 				Navegador.agregarVentanas(new VentanaAutoresActualizar());
 				Navegador.dispatcher("Crear autor", true);
 				Navegador.dispatcher(getTitle(), false);
-			}
 		});
 		
 		JScrollPane scrollPane = new JScrollPane();
@@ -80,17 +74,19 @@ public class VentanaAutores extends JFrame {
 		table = new JTable();
 		table.setBounds(0, 0, 1, 1);
 		scrollPane.setViewportView(table);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setModel(model);
 		
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				Navegador.dispatcher("Menu", true);
+				Navegador.obtenerVentana("Menu").setLocationRelativeTo(VentanaAutores.this);
 			}
 		});
 	}
 	
 	public void actualizarTabla() {
-		ArrayList<Autor> autores = AutorController.ver();
+		ArrayList<Autor> autores = Autor.actualizarLista();
 		model.setRowCount(0);
 		model.setColumnCount(0);
 		
@@ -101,7 +97,6 @@ public class VentanaAutores extends JFrame {
 		model.addColumn("Vivo");
 		model.addColumn("Seudónimo");
 		
-		Autor.actualizarLista();
 		for (Autor autor : autores) {
 			String vivo = Autor.obtenerVida(autor.isVivo());
 			String seudonimo = Autor.obtenerSeudonimo(autor.getSeudonimo());

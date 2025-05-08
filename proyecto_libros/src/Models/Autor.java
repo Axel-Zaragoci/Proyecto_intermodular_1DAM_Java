@@ -47,7 +47,8 @@ public class Autor {
 		return null;
 	}
 	
-	public static void actualizarLista() {
+	public static ArrayList<Autor> actualizarLista() {
 		autores = AutorController.ver();
+		return autores;
 	}
 }

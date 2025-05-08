@@ -1,6 +1,7 @@
 package Controllers;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,27 +9,63 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import Models.Autor;
-import Models.Navegador;
 import Views.VentanaAutores;
+import Views.*;
 
 public class AutorController {
-	public static void crear(Autor autor) {
+	public static boolean crear(Autor autor) {
+		try (Connection con = Database.conectar();) {
+			
+			String sqlBusqueda = "SELECT id FROM autor WHERE nombre = ? AND fecha_nacimiento = ? AND nacionalidad = ? AND estado = ? AND seudonimo = ?";
+			PreparedStatement stmtBusqueda = con.prepareStatement(sqlBusqueda);
+			stmtBusqueda.setString(1, autor.getNombre());
+			java.sql.Date time = autor.getFechaNacimiento() == null ? null : Date.valueOf(autor.getFechaNacimiento());
+			stmtBusqueda.setDate(2, time);
+			stmtBusqueda.setString(3, autor.getNacionalidad());
+			stmtBusqueda.setString(4, autor.isVivo() ? "Vivo" : "Fallecido");
+			if (autor.getSeudonimo() == -1) {
+				stmtBusqueda.setObject(5, null);
+			}
+			else {
+				stmtBusqueda.setObject(5, autor.getSeudonimo(), java.sql.Types.INTEGER);
+			}
+			
+			ResultSet rsBusqueda = stmtBusqueda.executeQuery();			
+			if(rsBusqueda.next()) {
+				return false;
+			}
+			else {
+			}
+		}
+		catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		
 		String sql = "INSERT INTO autor (nombre, fecha_nacimiento, nacionalidad, estado, seudonimo) VALUES (?, ?, ?, ?, ?);";
 		try (Connection con = Database.conectar();
 			 PreparedStatement stmt = con.prepareStatement(sql)) {
 			
 			stmt.setString(1, autor.getNombre());
-			stmt.setDate(2, java.sql.Date.valueOf(autor.getFechaNacimiento()));
+			java.sql.Date time = autor.getFechaNacimiento() == null ? null : Date.valueOf(autor.getFechaNacimiento());
+			stmt.setDate(2, time);
 			stmt.setString(3, autor.getNacionalidad());
 			stmt.setString(4, autor.isVivo()?"Vivo":"Fallecido");
-			stmt.setObject(5, autor.getSeudonimo(), java.sql.Types.INTEGER);
+			if (autor.getSeudonimo() == -1) {
+				stmt.setObject(5, null);
+			}
+			else {
+				stmt.setObject(5, autor.getSeudonimo(), java.sql.Types.INTEGER);
+			}
 			
 			stmt.execute();
+			
+			Navegador.mostrarMensajeInformacion(Navegador.obtenerVentana("Crear autor"), "Confirmado", "Se ha insertado el autor");
+			((VentanaAutoresCrear) Navegador.obtenerVentana("Crear autor")).actualizarLista();
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
-		Autor.actualizarLista();
+		return true;
 	}
 	
 	public static ArrayList<Autor> ver() {

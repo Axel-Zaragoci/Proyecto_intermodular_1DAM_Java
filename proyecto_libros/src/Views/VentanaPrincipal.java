@@ -9,10 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import Models.Navegador;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import Controllers.Navegador;
 
 public class VentanaPrincipal extends JFrame {
 
@@ -46,40 +43,34 @@ public class VentanaPrincipal extends JFrame {
 		LibroButton.setBounds(10, 120, 110, 27);
 		LibroButton.setFont(fuenteButton);
 		panel.add(LibroButton);
-		LibroButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		LibroButton.addActionListener(e -> {
 				VentanaLibros v = new VentanaLibros();
 				Navegador.agregarVentanas(v);
 				Navegador.dispatcher("Libros", true);
 				Navegador.dispatcher("Menu", false);
-			}
 		});
 		
 		JButton AutoresButton = new JButton("Autores");
 		AutoresButton.setBounds(157, 120, 110, 27);
 		AutoresButton.setFont(fuenteButton);
 		panel.add(AutoresButton);
-		AutoresButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		AutoresButton.addActionListener(e -> {
 				VentanaAutores v = new VentanaAutores();
 				Navegador.agregarVentanas(v);
 				v.actualizarTabla();
 				Navegador.dispatcher("Autores", true);
 				Navegador.dispatcher("Menu", false);
-			}
 		});
 		
 		JButton EditorialButton = new JButton("Editoriales");
 		EditorialButton.setBounds(298, 120, 110, 27);
 		EditorialButton.setFont(fuenteButton);
 		panel.add(EditorialButton);
-		EditorialButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		EditorialButton.addActionListener(e -> {
 				VentanaEditoriales v = new VentanaEditoriales();
 				Navegador.agregarVentanas(v);
 				Navegador.dispatcher("Editoriales", true);
 				Navegador.dispatcher("Menu", false);
-			}
 		});
 	}
 }
