@@ -34,8 +34,6 @@ public class AutorController {
 			if(rsBusqueda.next()) {
 				return false;
 			}
-			else {
-			}
 		}
 		catch (SQLException ex) {
 			ex.printStackTrace();
@@ -94,23 +92,30 @@ public class AutorController {
 		return lista;
 	}
 	
-	public static void actualizar(Autor autorEditado) {
+	public static boolean actualizar(Autor autorEditado) {
 		String sql = "UPDATE autor SET nombre = ?, fecha_nacimiento = ?, nacionalidad = ?, estado = ?, seudonimo = ? WHERE id = ?";
 		try (Connection con = Database.conectar();
-			 PreparedStatement stmt = con.prepareStatement(sql)) {
+			 PreparedStatement stmt = con.prepareStatement(sql)) {			
 			
 			stmt.setString(1, autorEditado.getNombre());
 			stmt.setDate(2, java.sql.Date.valueOf(autorEditado.getFechaNacimiento()));
 			stmt.setString(3, autorEditado.getNacionalidad());
 			stmt.setString(4, autorEditado.isVivo()?"Vivo":"Fallecido");
-			stmt.setObject(5, autorEditado.getSeudonimo(), java.sql.Types.INTEGER);
+			if (autorEditado.getSeudonimo() == -1) {
+				stmt.setObject(5, null);
+			}
+			else {
+				stmt.setObject(5, autorEditado.getSeudonimo(), java.sql.Types.INTEGER);
+			}
 			stmt.setInt(6, autorEditado.getId());			
 			stmt.executeUpdate();
 		}
-		catch (Exception e) {
+		catch (SQLException e) {
 			e.printStackTrace();
+			return false;
 		}
 		Autor.actualizarLista();
+		return true;
 	}
 	
 	public static boolean eliminar(int id) {

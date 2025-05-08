@@ -55,16 +55,23 @@ public class VentanaAutores extends JFrame {
 		deleteButton.setBounds(292, 11, 117, 23);
 		panel.add(deleteButton);
 		deleteButton.addActionListener(e -> {
-				VentanaAutores.this.eliminarAutor();
+			VentanaAutores.this.eliminarAutor();
 		});
 		
 		JButton updateButton = new JButton("Editar autor");
 		updateButton.setBounds(150, 11, 117, 23);
 		panel.add(updateButton);
 		updateButton.addActionListener(e -> {
+			int row = table.getSelectedRow();
+			if (row != -1) {
 				Navegador.agregarVentanas(new VentanaAutoresActualizar());
-				Navegador.dispatcher("Crear autor", true);
+				Navegador.dispatcher("Actualizar autor", true);
 				Navegador.dispatcher(getTitle(), false);
+				((VentanaAutoresActualizar) Navegador.obtenerVentana("Actualizar autor")).actualizarLista();
+				((VentanaAutoresActualizar) Navegador.obtenerVentana("Actualizar autor")).setDatos(Autor.obtenerAutor(row));
+				return;
+			}
+			Navegador.mostrarMensajeError(VentanaAutores.this, "Error", "Selecciona el autor a actualizar");
 		});
 		
 		JScrollPane scrollPane = new JScrollPane();
