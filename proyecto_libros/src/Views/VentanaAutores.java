@@ -15,8 +15,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import Controllers.AutorController;
-import Controllers.Navegador;
 import Models.Autor;
+import Controllers.Navegador;
 
 
 public class VentanaAutores extends JFrame {

@@ -11,9 +11,6 @@ import javax.swing.border.EmptyBorder;
 
 import Controllers.Navegador;
 
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-
 public class VentanaPrincipal extends JFrame {
 
 	private static final long serialVersionUID = 1L;
