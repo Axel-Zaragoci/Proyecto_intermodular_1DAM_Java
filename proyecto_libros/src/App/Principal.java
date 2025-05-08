@@ -1,5 +1,6 @@
+package App;
+import Controllers.Navegador;
 import Views.VentanaPrincipal;
-import Models.Navegador;
 
 public class Principal {
 

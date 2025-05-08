@@ -13,7 +13,6 @@ import javax.swing.JFrame;
 import Models.Autor;
 import Models.Editorial;
 import Models.Libro;
-import Models.Navegador;
 import Config.config;
 
 public class Database {
@@ -95,25 +94,27 @@ public class Database {
     }
 
     public static boolean revisarAutor(Autor autor, JFrame ventana) {
-    	if(autor.getNombre().length() > 50 || autor.getNombre().length() < 0) {
+    	if(autor.getNombre().length() > 50 || autor.getNombre().length() < 1) {
     		Navegador.mostrarMensajeError(ventana, "Error", "El autor debe de tener un nombre. El nombre debe ser de máximo 50 caracteres. Actualmente tiene " + autor.getNombre().length());
     		return false;
     	}
-    	try {
-    		java.sql.Date.valueOf(autor.getFechaNacimiento());
-    	}
-    	catch (Exception ex) {
-    		Navegador.mostrarMensajeError(ventana, "Error", "La fecha de nacimiento es inválida");
-    		ex.printStackTrace();
-    		return false;
-    	}
+    	
+		if (autor.getFechaNacimiento() != null) {
+			try {
+				java.sql.Date.valueOf(autor.getFechaNacimiento());
+			}
+			catch (Exception ex) {
+	    		Navegador.mostrarMensajeError(ventana, "Error", "La fecha de nacimiento es inválida");
+	    		return false;
+			}
+		}	
     	
     	if(autor.getNacionalidad().length() > 5 || autor.getNacionalidad().length() < 0) {
     		Navegador.mostrarMensajeError(ventana, "Error", "El autor debe de tener una nacionalidad. Esta se muestra mediante un código de hasta 4 letras");
     		return false;
     	}
     	
-    	if(autor.getSeudonimo() != null) {
+    	if(autor.getSeudonimo() != null && autor.getSeudonimo() != -1) {
         	String sqlAutorID = "SELECT MAX(id) AS id FROM autor";
     		try (Connection con = Database.conectar();
     			 PreparedStatement stmtAutorID = con.prepareStatement(sqlAutorID)) {

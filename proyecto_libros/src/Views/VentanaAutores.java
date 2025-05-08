@@ -15,11 +15,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import Controllers.AutorController;
+import Controllers.Navegador;
 import Models.Autor;
-import Models.Navegador;
 
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class VentanaAutores extends JFrame {
 
@@ -48,6 +46,7 @@ public class VentanaAutores extends JFrame {
 				Navegador.agregarVentanas(new VentanaAutoresCrear());
 				Navegador.dispatcher("Crear autor", true);
 				Navegador.dispatcher(getTitle(), false);
+				((VentanaAutoresCrear) Navegador.obtenerVentana("Crear autor")).actualizarLista();
 		});
 		createButton.setBounds(10, 11, 117, 23);
 		panel.add(createButton);
@@ -81,12 +80,13 @@ public class VentanaAutores extends JFrame {
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				Navegador.dispatcher("Menu", true);
+				Navegador.obtenerVentana("Menu").setLocationRelativeTo(VentanaAutores.this);
 			}
 		});
 	}
 	
 	public void actualizarTabla() {
-		ArrayList<Autor> autores = AutorController.ver();
+		ArrayList<Autor> autores = Autor.actualizarLista();
 		model.setRowCount(0);
 		model.setColumnCount(0);
 		
@@ -97,7 +97,6 @@ public class VentanaAutores extends JFrame {
 		model.addColumn("Vivo");
 		model.addColumn("Seudónimo");
 		
-		Autor.actualizarLista();
 		for (Autor autor : autores) {
 			String vivo = Autor.obtenerVida(autor.isVivo());
 			String seudonimo = Autor.obtenerSeudonimo(autor.getSeudonimo());

@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import Models.Navegador;
+import Controllers.Navegador;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
