@@ -143,7 +143,9 @@ public class VentanaAutoresActualizar extends JFrame {
 				date = null;
 			}
 			
-			Autor temp = new Autor(id, nameTextField.getText().trim(), date, nationTextField.getText().trim(), liveCheckBox.isSelected(), SeudoList.getSelectedIndex());
+			String[] iden = SeudoList.getSelectedValue().split(" - ");
+			int idSeudo = Integer.parseInt(iden[0]);
+			Autor temp = new Autor(id, nameTextField.getText().trim(), date, nationTextField.getText().trim(), liveCheckBox.isSelected(), idSeudo);
 			
 			if (Database.revisarAutor(temp, VentanaAutoresActualizar.this)) {
 				AutorController.actualizar(temp);
