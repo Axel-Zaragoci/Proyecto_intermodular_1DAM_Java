@@ -40,7 +40,8 @@ public class EditorialController {
 			 ResultSet rs = stmt.executeQuery(sql)) {
 			
 			while (rs.next()) {
-				Editorial editorial = new Editorial(rs.getInt("id"), rs.getString("nombre"), rs.getString("pais"), rs.getString("ciudad"), rs.getInt("ano_fundacion"), rs.getInt("telefono"), rs.getString("email"));
+				Integer anoFundacion = rs.getInt("ano_fundacion") == 0 ? null : rs.getInt("ano_fundacion");
+				Editorial editorial = new Editorial(rs.getInt("id"), rs.getString("nombre"), rs.getString("pais"), rs.getString("ciudad"), anoFundacion, rs.getLong("telefono"), rs.getString("email"));
 				lista.add(editorial);
 			}
 		}
