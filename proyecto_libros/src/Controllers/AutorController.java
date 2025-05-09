@@ -98,7 +98,8 @@ public class AutorController {
 			 PreparedStatement stmt = con.prepareStatement(sql)) {			
 			
 			stmt.setString(1, autorEditado.getNombre());
-			stmt.setDate(2, java.sql.Date.valueOf(autorEditado.getFechaNacimiento()));
+			java.sql.Date time = autorEditado.getFechaNacimiento() == null ? null : Date.valueOf(autorEditado.getFechaNacimiento());
+			stmt.setDate(2, time);
 			stmt.setString(3, autorEditado.getNacionalidad());
 			stmt.setString(4, autorEditado.isVivo()?"Vivo":"Fallecido");
 			if (autorEditado.getSeudonimo() == -1) {
@@ -114,6 +115,7 @@ public class AutorController {
 			e.printStackTrace();
 			return false;
 		}
+		Navegador.mostrarMensajeInformacion(Navegador.obtenerVentana("Actualizar autor"), "Completado", "Se ha actualizado el autor");
 		Autor.actualizarLista();
 		return true;
 	}
