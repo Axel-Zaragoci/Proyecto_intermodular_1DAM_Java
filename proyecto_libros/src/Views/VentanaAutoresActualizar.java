@@ -21,6 +21,8 @@ import Controllers.AutorController;
 import Controllers.Database;
 import Controllers.Navegador;
 import Models.Autor;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class VentanaAutoresActualizar extends JFrame {
 
@@ -152,8 +154,15 @@ public class VentanaAutoresActualizar extends JFrame {
 			}
 		});
 		
-		CreateButton.setBounds(10, 11, 128, 23);
+		CreateButton.setBounds(10, 11, 159, 23);
 		ButtonPanel.add(CreateButton);
+		
+		JButton deleteSeudoButton = new JButton("Eliminar seudónimo");
+		deleteSeudoButton.addActionListener(e -> {
+			actualizarLista();
+		});
+		deleteSeudoButton.setBounds(10, 45, 159, 23);
+		ButtonPanel.add(deleteSeudoButton);
 		
 		
 		this.addWindowListener(new WindowAdapter() {
