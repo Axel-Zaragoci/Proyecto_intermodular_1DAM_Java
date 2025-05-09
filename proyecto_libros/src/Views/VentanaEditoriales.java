@@ -68,6 +68,7 @@ public class VentanaEditoriales extends JFrame {
 		panel.add(scrollPane);
 		
 		table = new JTable(model);
+		table.setDefaultEditor(Object.class, null);
 		scrollPane.setViewportView(table);
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {

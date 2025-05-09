@@ -83,6 +83,7 @@ public class VentanaAutores extends JFrame {
 		scrollPane.setViewportView(table);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setModel(model);
+		table.setDefaultEditor(Object.class, null);
 		
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
