@@ -21,8 +21,6 @@ import Controllers.AutorController;
 import Controllers.Database;
 import Controllers.Navegador;
 import Models.Autor;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class VentanaAutoresActualizar extends JFrame {
 
