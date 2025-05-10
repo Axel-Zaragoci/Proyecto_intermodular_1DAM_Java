@@ -91,16 +91,18 @@ public class EditorialController {
 		}
 	}
 
-	public static void eliminar(int id) {
+	public static boolean eliminar(int id) {
 		String sql = "DELETE FROM editorial WHERE id = ?";
 		try (Connection con = Database.conectar();
 			 PreparedStatement stmt = con.prepareStatement(sql);) {
 			
 			stmt.setInt(1, id);
 			stmt.executeUpdate();
+			return true;
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
+			return false;
 		}
 	}
 }
