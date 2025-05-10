@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -13,6 +14,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import Controllers.EditorialController;
 import Controllers.Navegador;
 import Models.Editorial;
 
@@ -62,7 +64,20 @@ public class VentanaEditoriales extends JFrame {
 		JButton deleteButton = new JButton("Eliminar editorial");
 		deleteButton.setBounds(320, 11, 145, 23);
 		deleteButton.addActionListener(e -> {
-			
+			int seleccionado = table.getSelectedRow();
+			if (seleccionado == -1) {
+				Navegador.mostrarMensajeError(VentanaEditoriales.this, "Error", "Debes seleccionar una o más líneas");
+				return;
+			}
+			if (Navegador.mostrarMensajePregunta(VentanaEditoriales.this, "Confirmación", "Seguro que quieres eliminar la editorial " + model.getValueAt(seleccionado, 1)) == JOptionPane.OK_OPTION) {
+				if (!EditorialController.eliminar((int) model.getValueAt(seleccionado, 0))) {
+					Navegador.mostrarMensajeError(VentanaEditoriales.this, "Error", "No se ha podido eliminar la editorial " + model.getValueAt(seleccionado, 1));
+				}
+				else {
+					Navegador.mostrarMensajeInformacion(VentanaEditoriales.this, "Completado", "Se ha eliminado correctamente la editorial");
+				}
+			}
+			actualizarTabla();
 		});
 		buttonsPanel.add(deleteButton);
 		
@@ -96,7 +111,7 @@ public class VentanaEditoriales extends JFrame {
 		model.addColumn("Email");
 		
 		for (Editorial e : editoriales) {
-			Object[] a = {e.getId(), e.getNombre(), e.getPais(), e.getCiudad(), e.getAnoFundacion(), e.getTelefono() == 0 ? "" : e.getTelefono(), e.getEmail()};
+			Object[] a = {e.getId(), e.getNombre(), e.getPais(), e.getCiudad(), e.getAnoFundacion() == 0 ? "" : e.getAnoFundacion(), e.getTelefono() == 0 ? "" : e.getTelefono(), e.getEmail()};
 			model.addRow(a);
 		}
 	}
