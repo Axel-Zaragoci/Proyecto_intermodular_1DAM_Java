@@ -19,6 +19,10 @@ public class Editorial {
 	private String email;
 	private static ArrayList<Editorial> editoriales = new ArrayList<>();
 	
+	public static Editorial obtenerEditorial(int id) {
+		return editoriales.get(id);
+	}
+	
 	public Editorial(String nombre, String pais, String ciudad, Integer anoFundacion, long telefono, String email) {
 		this.nombre = nombre;
 		this.pais = pais;

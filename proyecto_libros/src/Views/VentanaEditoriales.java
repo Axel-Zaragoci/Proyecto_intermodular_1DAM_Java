@@ -57,7 +57,15 @@ public class VentanaEditoriales extends JFrame {
 		JButton updateButton = new JButton("Actualizar editorial");
 		updateButton.setBounds(165, 11, 145, 23);
 		updateButton.addActionListener(e -> {
-			
+			int row = table.getSelectedRow();
+			if (row != -1) {
+				Navegador.agregarVentanas(new VentanaEditorialesActualizar());
+				((VentanaEditorialesActualizar) Navegador.obtenerVentana("Actualizar editorial")).setVisible(true);
+				VentanaEditoriales.this.setVisible(false);
+				((VentanaEditorialesActualizar) Navegador.obtenerVentana("Actualizar editorial")).setData(Editorial.obtenerEditorial(row));
+				return;
+			}
+			Navegador.mostrarMensajeError(VentanaEditoriales.this, "Error", "Selecciona una editorial");
 		});
 		buttonsPanel.add(updateButton);
 		

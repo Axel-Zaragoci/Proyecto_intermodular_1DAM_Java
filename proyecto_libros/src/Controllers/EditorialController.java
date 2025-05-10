@@ -72,7 +72,7 @@ public class EditorialController {
 		return lista;
 	}
 	
-	public static void actualizar(Editorial editorialEditada) {
+	public static boolean actualizar(Editorial editorialEditada) {
 		String sql = "UPDATE editorial SET nombre = ?, pais = ?, ciudad = ?, ano_fundacion = ?, telefono = ?, email = ? WHERE id = ?";
 		try (Connection con = Database.conectar();
 			 PreparedStatement stmt = con.prepareStatement(sql)) {
@@ -80,15 +80,24 @@ public class EditorialController {
 			stmt.setString(1, editorialEditada.getNombre());
 			stmt.setString(2, editorialEditada.getPais());
 			stmt.setString(3, editorialEditada.getCiudad());
-			stmt.setInt(4, editorialEditada.getAnoFundacion());
-			stmt.setLong(5, editorialEditada.getTelefono());
+			if (editorialEditada.getAnoFundacion() == null) {
+				stmt.setObject(4, null);
+			}
+			else {
+				stmt.setObject(4, editorialEditada.getAnoFundacion(), java.sql.Types.INTEGER);
+			}
+			stmt.setString(5, editorialEditada.getTelefono() == 0 ? null : editorialEditada.getTelefono()+"");
 			stmt.setString(6, editorialEditada.getEmail());
 			stmt.setInt(7, editorialEditada.getId());
 			stmt.executeUpdate();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
+			return false;
 		}
+		Navegador.mostrarMensajeInformacion(Navegador.obtenerVentana("Actualizar editorial"), "Completado", "Se ha actualizado correctamente la editorial");
+		Editorial.actualizarLista();
+		return true;
 	}
 
 	public static boolean eliminar(int id) {
