@@ -43,4 +43,8 @@ public class Editorial {
 		editoriales.sort(Comparator.comparing(Editorial::getId));
 		return editoriales;
 	}
+	
+	public Integer getAnoFundacion() {
+		return anoFundacion == null ? 0 : anoFundacion;
+	}
 }

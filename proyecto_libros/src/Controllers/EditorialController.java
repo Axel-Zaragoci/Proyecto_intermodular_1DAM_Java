@@ -11,19 +11,40 @@ import Models.Editorial;
 
 public class EditorialController {
 	public static void crear(Editorial editorial) {
-		String sql = "INSERT INTO editorial"
-				+ " (nombre, pais, telefono, email, ciudad, ano_fundacion) VALUES (?, ?, ?, ?, ?, ?);";
-		try (Connection con = Database.conectar();
-			 PreparedStatement stmt = con.prepareStatement(sql)) {
+		String sql = "SELECT * FROM editorial";
+		try (Connection con = Database.conectar();) {
+			Statement selectStmt = con.createStatement();
+			ResultSet rs = selectStmt.executeQuery(sql);
 			
-			stmt.setString(1, editorial.getNombre());
-			stmt.setString(2, editorial.getPais());
-			stmt.setLong(3, editorial.getTelefono());
-			stmt.setString(4, editorial.getEmail());
-			stmt.setString(5, editorial.getCiudad());;
-			stmt.setInt(6, editorial.getAnoFundacion());
+			boolean exist = false;
+			while (rs.next()) {
+				Integer ano = editorial.getAnoFundacion() == null ? 0 : editorial.getAnoFundacion();
+				if (rs.getString("nombre").equalsIgnoreCase(editorial.getNombre()) && rs.getString("pais").equalsIgnoreCase(editorial.getPais()) && rs.getLong("telefono") == editorial.getTelefono() && rs.getString("email").equalsIgnoreCase(editorial.getEmail()) && rs.getString("ciudad").equalsIgnoreCase(editorial.getCiudad()) && rs.getInt("ano_fundacion") == ano) {
+					exist = true;
+				}
+			}
 			
-			stmt.execute();
+			if (!exist) {
+				String sqlInsert = "INSERT INTO editorial (nombre, pais, telefono, email, ciudad, ano_fundacion) VALUES (?, ?, ?, ?, ?, ?);";
+				PreparedStatement stmt = con.prepareStatement(sqlInsert);
+				stmt.setString(1, editorial.getNombre());
+				stmt.setString(2, editorial.getPais());
+				stmt.setString(3, editorial.getTelefono() == 0 ? null : editorial.getTelefono()+"");
+				stmt.setString(4, editorial.getEmail());
+				stmt.setString(5, editorial.getCiudad());;
+				if (editorial.getAnoFundacion() == null) {
+					stmt.setObject(6, null);
+				}
+				else {
+					stmt.setObject(6, editorial.getAnoFundacion(), java.sql.Types.INTEGER);
+				}
+				
+				stmt.execute();
+				Navegador.mostrarMensajeInformacion(Navegador.obtenerVentana("Crear editorial"), "Completado", "Se ha insertado la editorial correctamente");
+			}
+			else {
+				Navegador.mostrarMensajeError(Navegador.obtenerVentana("Crear editorial"), "Error", "Ya existe una editorial con estos datos");
+			}
 		}
 		catch (SQLException e) {
 			e.printStackTrace();

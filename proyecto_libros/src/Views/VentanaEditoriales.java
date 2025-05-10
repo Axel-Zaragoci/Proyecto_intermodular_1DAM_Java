@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
@@ -45,7 +46,9 @@ public class VentanaEditoriales extends JFrame {
 		JButton createButton = new JButton("Crear editorial");
 		createButton.setBounds(10, 11, 145, 23);
 		createButton.addActionListener(e -> {
-			
+			Navegador.agregarVentanas(new VentanaEditorialesCrear());
+			((VentanaEditorialesCrear) Navegador.obtenerVentana("Crear editorial")).setVisible(true);
+			VentanaEditoriales.this.setVisible(false);
 		});
 		buttonsPanel.add(createButton);
 		
@@ -68,6 +71,7 @@ public class VentanaEditoriales extends JFrame {
 		panel.add(scrollPane);
 		
 		table = new JTable(model);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setDefaultEditor(Object.class, null);
 		scrollPane.setViewportView(table);
 		this.addWindowListener(new WindowAdapter() {

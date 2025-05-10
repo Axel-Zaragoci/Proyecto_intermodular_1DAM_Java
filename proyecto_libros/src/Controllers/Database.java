@@ -5,8 +5,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.swing.JFrame;
 
@@ -146,9 +144,11 @@ public class Database {
     		return false;
     	}
     	
-    	if (editorial.getPais().length() > 30 || editorial.getPais().length() < 1) {
-    		Navegador.mostrarMensajeError(ventana, "Error", "El país de la editorial debe tener un máximo de 30 caracteres. Actualmente tiene " + editorial.getPais().length());
-    		return false;
+    	if (!editorial.getPais().equals("")) {
+    		if (editorial.getPais().length() > 30 || editorial.getPais().length() < 1) {
+        		Navegador.mostrarMensajeError(ventana, "Error", "El país de la editorial debe tener un máximo de 30 caracteres. Actualmente tiene " + editorial.getPais().length());
+        		return false;
+        	}
     	}
     	
     	if ((editorial.getTelefono() + "").length() > 13 || (editorial.getTelefono() + "").length() < 1) {
@@ -156,25 +156,18 @@ public class Database {
     		return false;
     	}
     	
-    	if (editorial.getEmail() != null) {
-    		Pattern pattern = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$", Pattern.CASE_INSENSITIVE);
-            Matcher verificar = pattern.matcher(editorial.getEmail());
-        	if (!verificar.matches()) {
-        		Navegador.mostrarMensajeError(ventana, "Error", "La editorial debe tener un email válido");
-        		return false;
-        	}
-    	}
-    	
     	if (editorial.getCiudad() != null) {
-    		if (editorial.getCiudad().length() > 50 || editorial.getCiudad().length() < 1) {
+    		if (editorial.getCiudad().length() > 50 || editorial.getCiudad().length() < 0) {
         		Navegador.mostrarMensajeError(ventana, "Error", "La editorial debe tener una ciudad asignada para su central y debe tener un máximo de 50 caracteres. Actualmente tiene " + editorial.getPais().length());
         		return false;
     		}
     	}
     	
-    	if (editorial.getAnoFundacion() > 10000 || editorial.getAnoFundacion() < -10000) {
-    		Navegador.mostrarMensajeError(ventana, "Error", "La editorial debe tener un año de fundación válido");
-    		return false;
+    	if (editorial.getAnoFundacion() != 0) {
+    		if (editorial.getAnoFundacion() > 10000 || editorial.getAnoFundacion() < -10000) {
+        		Navegador.mostrarMensajeError(ventana, "Error", "La editorial debe tener un año de fundación válido");
+        		return false;
+        	}
     	}
     	return true;
     }
