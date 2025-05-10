@@ -103,7 +103,7 @@ public class LibroController {
 		return libros;
 	}
 	
-	public void actualizarLibro(Libro libro) throws SQLException {
+	public static void actualizarLibro(Libro libro) throws SQLException {
 	    Connection con = Database.conectar();
 	    try {
 	        con.setAutoCommit(false);

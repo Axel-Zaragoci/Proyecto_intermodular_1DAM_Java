@@ -1,6 +1,9 @@
 package Models;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+
+import Controllers.LibroController;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,6 +19,17 @@ public class Libro {
 	private double precio;
 	private long isbn;
 	private String idioma;
+	private static ArrayList<Libro> libros = new ArrayList<>();
+	
+	public static Libro obtenerLibro(int id) {
+		return libros.get(id);
+	}
+	
+	public static ArrayList<Libro> actualizarLista() {
+		libros = LibroController.ver();
+		libros.sort(Comparator.comparing(Libro::getId));
+		return libros;
+	}
 	
 	public Libro(String titulo, int editorial, Integer[] autor, Integer paginas, Integer publicacion, double precio, long isbn, String idioma) {
 		this.titulo = titulo;

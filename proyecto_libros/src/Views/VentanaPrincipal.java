@@ -46,6 +46,7 @@ public class VentanaPrincipal extends JFrame {
 		LibroButton.addActionListener(e -> {
 				VentanaLibros v = new VentanaLibros();
 				Navegador.agregarVentanas(v);
+				v.actualizarTabla();
 				Navegador.dispatcher("Libros", true);
 				Navegador.dispatcher("Menu", false);
 		});

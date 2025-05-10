@@ -20,7 +20,6 @@ import Controllers.Navegador;
 
 
 public class VentanaAutores extends JFrame {
-
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
