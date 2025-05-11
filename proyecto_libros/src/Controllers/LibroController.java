@@ -151,7 +151,7 @@ public class LibroController {
         con.close();
 	}
 
-	public static void eliminar(int id) throws SQLException {
+	public static boolean eliminar(int id) throws SQLException {
 		Connection con = Database.conectar();
 		try {
 			con.setAutoCommit(false);
@@ -176,8 +176,10 @@ public class LibroController {
 		catch (SQLException ex) {
 			con.rollback();
 			ex.printStackTrace();
+			return false;
 		}
 		con.setAutoCommit(true);
 		con.close();
+		return true;
 	}
 }
