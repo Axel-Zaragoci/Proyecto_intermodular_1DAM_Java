@@ -44,10 +44,13 @@ public class Libro {
 		this.idioma = idioma;
 	}
 	
-	public Libro(int id, String titulo, int editorial, Integer paginas, Integer publicacion, double precio, long isbn, String idioma) {
+	public Libro(int id, String titulo, int editorial, Integer[] autor, Integer paginas, Integer publicacion, double precio, long isbn, String idioma) {
 		this.id = id;
 		this.titulo = titulo;
 		this.editorial = editorial;
+		for(Integer a : autor) {
+			this.autor.add(a);
+		}
 		this.paginas = paginas;
 		this.publicacion = publicacion;
 		this.precio = precio;
