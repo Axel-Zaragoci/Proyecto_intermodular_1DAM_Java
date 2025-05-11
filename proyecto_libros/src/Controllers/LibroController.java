@@ -98,7 +98,7 @@ public class LibroController {
 					autores.add(rsAutores.getInt("autor"));
 				}
 				
-				Libro libro = new Libro(libroID, rs.getString("titulo"), rs.getInt("editorial"), rs.getInt("paginas"), rs.getInt("ano_publicacion"), rs.getDouble("precio"), rs.getLong("isbn"), rs.getString("idioma"));
+				Libro libro = new Libro(libroID, rs.getString("titulo"), rs.getInt("editorial"), autores.toArray(new Integer[0]),rs.getInt("paginas"), rs.getInt("ano_publicacion"), rs.getDouble("precio"), rs.getLong("isbn"), rs.getString("idioma"));
 				libro.setAutor(autores);
 				libros.add(libro);
 			}
@@ -119,7 +119,7 @@ public class LibroController {
 	        stmtLibro.setInt(2, libro.getPaginas());
 	        stmtLibro.setInt(3, libro.getId());
 	        stmtLibro.executeUpdate();
-
+	        
 	        String sqlEditar = "UPDATE editar SET editorial = ?, precio = ?, isbn = ?, idioma = ? WHERE libro = ? ";
 	        PreparedStatement stmtEditar = con.prepareStatement(sqlEditar);
 	        stmtEditar.setInt(1, libro.getEditorial());

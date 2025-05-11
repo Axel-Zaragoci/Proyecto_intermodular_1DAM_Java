@@ -66,14 +66,14 @@ public class VentanaLibros extends JFrame {
 		updateButton.addActionListener(e -> {
 			int row = table.getSelectedRow();
 			if (row != -1) {
-				Navegador.agregarVentanas(new VentanaAutoresActualizar());
-				Navegador.dispatcher("Actualizar autor", true);
+				Navegador.agregarVentanas(new VentanaLibrosActualizar());
+				Navegador.dispatcher("Actualizar libro", true);
 				Navegador.dispatcher(getTitle(), false);
-				//((VentanaLibrosActualizar) Navegador.obtenerVentana("Actualizar libro")).actualizarLista();
-				//((VentanaLibrosActualizar) Navegador.obtenerVentana("Actualizar libro")).setDatos(Libro.obtenerLibro(row));
+				((VentanaLibrosActualizar) Navegador.obtenerVentana("Actualizar libro")).actualizarListas();
+				((VentanaLibrosActualizar) Navegador.obtenerVentana("Actualizar libro")).obtenerDatos(Libro.obtenerLibro((int) model.getValueAt(row, 0)));
 				return;
 			}
-			Navegador.mostrarMensajeError(VentanaLibros.this, "Error", "Selecciona el autor a actualizar");
+			Navegador.mostrarMensajeError(VentanaLibros.this, "Error", "Selecciona el libro a actualizar");
 		});
 		
 		JScrollPane scrollPane = new JScrollPane();
