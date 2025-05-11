@@ -44,10 +44,10 @@ public class VentanaLibros extends JFrame {
 		
 		JButton createButton = new JButton("Crear libro");
 		createButton.addActionListener(e -> {
-				//Navegador.agregarVentanas(new VentanaLibrosCrear());
+				Navegador.agregarVentanas(new VentanaLibrosCrear());
 				Navegador.dispatcher("Crear libro", true);
 				Navegador.dispatcher(getTitle(), false);
-				//((VentanaLibrosCrear) Navegador.obtenerVentana("Crear libro")).actualizarLista();
+				((VentanaLibrosCrear) Navegador.obtenerVentana("Crear libro")).actualizarListas();
 		});
 		createButton.setBounds(10, 11, 117, 23);
 		panel.add(createButton);
