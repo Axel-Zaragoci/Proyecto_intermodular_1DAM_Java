@@ -53,6 +53,11 @@ public class LibroController {
 	        stmtInsertEditar.setString(5, libro.getIdioma());
 	        stmtInsertEditar.executeUpdate();
 	        
+	        String sqlDeleteEscribir = "DELETE FROM escribir WHERE libro = ?";
+	        PreparedStatement stmtDeleteEscribir = con.prepareStatement(sqlDeleteEscribir);
+	        stmtDeleteEscribir.setInt(1, libroID);
+	        stmtDeleteEscribir.executeUpdate();
+	        
 	        String sqlInsertsEscribir = "INSERT INTO escribir (libro, autor) VALUES (?, ?)";
 	        PreparedStatement stmtInsertEscribir = con.prepareStatement(sqlInsertsEscribir);
 	        for (int autor : libro.getAutor()) {
