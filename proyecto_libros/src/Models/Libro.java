@@ -22,7 +22,12 @@ public class Libro {
 	private static ArrayList<Libro> libros = new ArrayList<>();
 	
 	public static Libro obtenerLibro(int id) {
-		return libros.get(id);
+		for (Libro l : libros) {
+			if (l.id == id) {
+				return l;
+			}
+		}
+		return null;
 	}
 	
 	public static ArrayList<Libro> actualizarLista() {
@@ -45,11 +50,11 @@ public class Libro {
 	}
 	
 
-	public Libro(int id, String titulo, int editorial, Integer paginas, Integer publicacion, Double precio, Long isbn, String idioma) {
+	public Libro(int id, String titulo, int editorial, Integer[] autores ,Integer paginas, Integer publicacion, Double precio, Long isbn, String idioma) {
 		this.id = id;
 		this.titulo = titulo;
 		this.editorial = editorial;
-		for(Integer a : autor) {
+		for(Integer a : autores) {
 			this.autor.add(a);
 		}
 		this.paginas = paginas;

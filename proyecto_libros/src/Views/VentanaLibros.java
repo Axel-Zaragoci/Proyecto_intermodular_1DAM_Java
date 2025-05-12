@@ -64,16 +64,7 @@ public class VentanaLibros extends JFrame {
 		updateButton.setBounds(150, 11, 117, 23);
 		panel.add(updateButton);
 		updateButton.addActionListener(e -> {
-			int row = table.getSelectedRow();
-			if (row != -1) {
-				Navegador.agregarVentanas(new VentanaLibrosActualizar());
-				Navegador.dispatcher("Actualizar libro", true);
-				Navegador.dispatcher(getTitle(), false);
-				((VentanaLibrosActualizar) Navegador.obtenerVentana("Actualizar libro")).actualizarListas();
-				((VentanaLibrosActualizar) Navegador.obtenerVentana("Actualizar libro")).obtenerDatos(Libro.obtenerLibro((int) model.getValueAt(row, 0)));
-				return;
-			}
-			Navegador.mostrarMensajeError(VentanaLibros.this, "Error", "Selecciona el libro a actualizar");
+			actualizar();
 		});
 		
 		JScrollPane scrollPane = new JScrollPane();
@@ -141,5 +132,18 @@ public class VentanaLibros extends JFrame {
 				Navegador.mostrarMensajeError(this, "Error", "No se ha podido eliminar el autor " + model.getValueAt(seleccionado, 1));
 			}
 		}
+	}
+	
+	public void actualizar() {
+		int id = (int) model.getValueAt(table.getSelectedRow(), 0);
+		if (id != -1) {
+			Navegador.agregarVentanas(new VentanaLibrosActualizar());
+			Navegador.dispatcher("Actualizar libro", true);
+			Navegador.dispatcher(getTitle(), false);
+			((VentanaLibrosActualizar) Navegador.obtenerVentana("Actualizar libro")).actualizarListas();
+			((VentanaLibrosActualizar) Navegador.obtenerVentana("Actualizar libro")).obtenerDatos(Libro.obtenerLibro(id));
+			return;
+		}
+		Navegador.mostrarMensajeError(VentanaLibros.this, "Error", "Selecciona el libro a actualizar");
 	}
 }

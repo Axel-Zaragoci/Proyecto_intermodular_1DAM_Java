@@ -167,7 +167,7 @@ public class VentanaLibrosActualizar extends JFrame {
 			int[] autoresTemp = writerList.getSelectedIndices();
 			ArrayList<Integer> autoresIDs = new ArrayList<>();
 			for (int autor : autoresTemp) {
-				autoresIDs.add(Integer.parseInt(writers.getElementAt(autor).split(" - ")[0])+1);
+				autoresIDs.add(Integer.parseInt(writers.getElementAt(autor).split(" - ")[0]));
 			}
 			
 			Libro temp = new Libro(id, titulo, editorial, autoresIDs.toArray(new Integer[0]), paginas, ano, precio, isbn, idioma);
@@ -219,7 +219,7 @@ public class VentanaLibrosActualizar extends JFrame {
 		Integer[] autores = l.getAutor().toArray(new Integer[0]);
 		int[] autoresArr = new int[autores.length];
 		for (int i = 0; i < autores.length; i++) {
-			autoresArr[i] = autores[i];
+			autoresArr[i] = autores[i]-1;
 		}
 		writerList.setSelectedIndices(autoresArr);
 		id = l.getId();
