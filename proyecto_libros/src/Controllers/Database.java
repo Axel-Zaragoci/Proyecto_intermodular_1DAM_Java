@@ -114,7 +114,7 @@ public class Database {
     		return false;
     	}
     	
-    	if(autor.getSeudonimo() != -1) {
+    	if(autor.getSeudonimo() != null) {
         	String sqlAutorID = "SELECT MAX(id) AS id FROM autor";
     		try (Connection con = Database.conectar();
     			 PreparedStatement stmtAutorID = con.prepareStatement(sqlAutorID)) {

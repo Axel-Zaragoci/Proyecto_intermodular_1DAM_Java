@@ -135,8 +135,8 @@ public class VentanaLibros extends JFrame {
 	}
 	
 	public void actualizar() {
-		int id = (int) model.getValueAt(table.getSelectedRow(), 0);
-		if (id != -1) {
+		if (table.getSelectedRow() != -1) {
+			int id = (int) model.getValueAt(table.getSelectedRow(), 0);
 			Navegador.agregarVentanas(new VentanaLibrosActualizar());
 			Navegador.dispatcher("Actualizar libro", true);
 			Navegador.dispatcher(getTitle(), false);

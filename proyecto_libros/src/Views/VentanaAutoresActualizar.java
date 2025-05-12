@@ -143,14 +143,17 @@ public class VentanaAutoresActualizar extends JFrame {
 				date = null;
 			}
 			
-			String[] iden = SeudoList.getSelectedValue().split(" - ");
-			int idSeudo = Integer.parseInt(iden[0]);
+			Integer idSeudo = null;
+			if (SeudoList.getSelectedIndex() != -1) {
+				String[] iden = SeudoList.getSelectedValue().split(" - ");
+				idSeudo = Integer.parseInt(iden[0]);
+			}
 			Autor temp = new Autor(id, nameTextField.getText().trim(), date, nationTextField.getText().trim(), liveCheckBox.isSelected(), idSeudo);
 			
 			if (Database.revisarAutor(temp, VentanaAutoresActualizar.this)) {
 				AutorController.actualizar(temp);
 				actualizarLista();
-				limpiar();
+				salir();
 			}
 		});
 		
@@ -168,7 +171,7 @@ public class VentanaAutoresActualizar extends JFrame {
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				Navegador.dispatcher("Autores", true);
-				Navegador.obtenerVentana("Menu").setLocationRelativeTo(VentanaAutoresActualizar.this);
+				Navegador.obtenerVentana("Autores").setLocationRelativeTo(VentanaAutoresActualizar.this);
 				((VentanaAutores) Navegador.obtenerVentana("Autores")).actualizarTabla();
 			}
 		});
@@ -182,14 +185,11 @@ public class VentanaAutoresActualizar extends JFrame {
 		}
 	}
 
-	public void limpiar() {
-		nameTextField.setText(null);
-		yearTextField.setText(null);
-		monthTextField.setText(null);
-		dayTextField.setText(null);
-		nationTextField.setText(null);
-		liveCheckBox.setSelected(false);
-		SeudoList.setSelectedIndex(-1);;
+	public void salir() {
+		this.setVisible(false);
+		Navegador.dispatcher("Autores", true);
+		Navegador.obtenerVentana("Autores").setLocationRelativeTo(VentanaAutoresActualizar.this);
+		((VentanaAutores) Navegador.obtenerVentana("Autores")).actualizarTabla();
 	}
 	
 	public void setDatos(Autor a) {

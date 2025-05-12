@@ -102,7 +102,7 @@ public class AutorController {
 			stmt.setDate(2, time);
 			stmt.setString(3, autorEditado.getNacionalidad());
 			stmt.setString(4, autorEditado.isVivo()?"Vivo":"Fallecido");
-			if (autorEditado.getSeudonimo() == -1) {
+			if (autorEditado.getSeudonimo() == null) {
 				stmt.setObject(5, null);
 			}
 			else {
