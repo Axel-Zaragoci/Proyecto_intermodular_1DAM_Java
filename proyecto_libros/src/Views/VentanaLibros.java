@@ -117,7 +117,11 @@ public class VentanaLibros extends JFrame {
 			for (Integer id : libro.getAutor()) {
 				autores = autores + Autor.obtenerAutor(id-1).getNombre() + ", ";
 			}
-			Object[] a = {libro.getId(), libro.getTitulo(), (Editorial.obtenerEditorial(libro.getEditorial()-1)).getNombre(), autores.substring(0, autores.length() - 2), libro.getPaginas(), libro.getPublicacion(), libro.getPrecio(), libro.getIsbn(), libro.getIdioma()};
+			Object paginas = libro.getPaginas() == 0 ? "" : libro.getPaginas();
+			Object publicacion = libro.getPublicacion() == 0 ? "" : libro.getPublicacion();
+			Object precio = libro.getPrecio() == 0 ? "" : libro.getPrecio();
+			Object isbn = libro.getIsbn() == 0 ? "" : libro.getIsbn();
+			Object[] a = {libro.getId(), libro.getTitulo(), (Editorial.obtenerEditorial(libro.getEditorial()-1)).getNombre(), autores.substring(0, autores.length() - 2), paginas, publicacion, precio, isbn, libro.getIdioma()};
 			model.addRow(a);
 		}
 	}

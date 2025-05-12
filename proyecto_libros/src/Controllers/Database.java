@@ -79,10 +79,12 @@ public class Database {
 			return false;
 		}
 		
-		String isbn = libro.getIsbn() + "";
-		if (isbn.length() != 9 && isbn.length() != 10 && isbn.length() != 13) {
-			Navegador.mostrarMensajeError(ventana, "Error", "El ISBN es invalido. Si tiene una letra debes quitarla");
-			return false;
+		if (libro.getIsbn() != 0) {
+			String isbn = libro.getIsbn() + "";
+			if (isbn.length() != 9 && isbn.length() != 10 && isbn.length() != 13) {
+				Navegador.mostrarMensajeError(ventana, "Error", "El ISBN es invalido. Si tiene una letra debes quitarla");
+				return false;
+			}
 		}
 		
 		if (libro.getIdioma() == null || libro.getIdioma().length() > 4) {
