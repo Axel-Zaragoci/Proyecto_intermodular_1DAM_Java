@@ -16,8 +16,8 @@ public class Libro {
 	private ArrayList<Integer> autor = new ArrayList<>();
 	private Integer paginas;
 	private Integer publicacion;
-	private double precio;
-	private long isbn;
+	private Double precio;
+	private Long isbn;
 	private String idioma;
 	private static ArrayList<Libro> libros = new ArrayList<>();
 	
@@ -31,7 +31,7 @@ public class Libro {
 		return libros;
 	}
 	
-	public Libro(String titulo, int editorial, Integer[] autor, Integer paginas, Integer publicacion, double precio, long isbn, String idioma) {
+	public Libro(String titulo, int editorial, Integer[] autor, Integer paginas, Integer publicacion, Double precio, Long isbn, String idioma) {
 		this.titulo = titulo;
 		this.editorial = editorial;
 		for(Integer a : autor) {
@@ -44,7 +44,7 @@ public class Libro {
 		this.idioma = idioma;
 	}
 	
-	public Libro(int id, String titulo, int editorial, Integer paginas, Integer publicacion, double precio, long isbn, String idioma) {
+	public Libro(int id, String titulo, int editorial, Integer paginas, Integer publicacion, Double precio, Long isbn, String idioma) {
 		this.id = id;
 		this.titulo = titulo;
 		this.editorial = editorial;

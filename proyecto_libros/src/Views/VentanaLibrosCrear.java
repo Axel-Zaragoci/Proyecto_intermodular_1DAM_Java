@@ -33,6 +33,8 @@ public class VentanaLibrosCrear extends JFrame {
 	private JTextField codeTextField;
 	private DefaultListModel<String> writers = new DefaultListModel<>();
 	private DefaultListModel<String> editors = new DefaultListModel<>();
+	private JList<String> writerList;
+	private JList<String> editorList;
 
 	public VentanaLibrosCrear() {
 		setLocationRelativeTo(Navegador.obtenerVentana("Libros"));
@@ -107,81 +109,20 @@ public class VentanaLibrosCrear extends JFrame {
 		JScrollPane writerScrollPane = new JScrollPane();
 		writerScrollPane.setBounds(405, 11, 245, 343);
 		contentPane.add(writerScrollPane);
-		JList<String> writerList = new JList<>(writers);
+		writerList = new JList<>(writers);
 		writerScrollPane.setViewportView(writerList);
 	
 		JScrollPane editorScrollPane = new JScrollPane();
 		editorScrollPane.setBounds(660, 11, 260, 343);
 		contentPane.add(editorScrollPane);
-		JList<String> editorList = new JList<>(editors);
+		editorList = new JList<>(editors);
 		editorScrollPane.setViewportView(editorList);
 		
 		JButton createButton = new JButton("Crear libro");
 		createButton.setBounds(10, 182, 104, 23);
 		formPanel.add(createButton);
 		createButton.addActionListener( e -> {
-			String titulo = titleTextField.getText().trim();
-			Integer paginas;
-			try {
-				paginas = Integer.parseInt(pageTextField.getText().trim());
-			}
-			catch (Exception ex) {
-				Navegador.mostrarMensajeError(VentanaLibrosCrear.this, "Error", "El número de páginas debe de ser un número");
-				return;
-			}
-			Integer ano;
-			try {
-				ano = Integer.parseInt(yearTextField.getText().trim());
-			}
-			catch (Exception ex) {
-				Navegador.mostrarMensajeError(VentanaLibrosCrear.this, "Error", "El año de publicación debe de ser un número");
-				return;
-			}
-			Double precio;
-			try {
-				precio = Double.parseDouble(costTextField.getText().trim());
-			}
-			catch (Exception ex) {
-				Navegador.mostrarMensajeError(VentanaLibrosCrear.this, "Error", "El precio debe de ser un número");
-				return;
-			}
-			Long isbn;
-			try {
-				isbn = Long.parseLong(isbnTextField.getText().trim());
-			}
-			catch (Exception ex) {
-				Navegador.mostrarMensajeError(VentanaLibrosCrear.this, "Error", "El ISBN debe de ser solo números");
-				return;
-			}
-			
-			String idioma = codeTextField.getText().trim();
-			
-			int[] autoresTemp = writerList.getSelectedIndices();
-			if (autoresTemp.length == 0) {
-				Navegador.mostrarMensajeError(VentanaLibrosCrear.this, "Error", "Debe de haber al menos 1 autor seleccionado");
-				return;
-			}
-			Integer[] autores = new Integer[autoresTemp.length];
-			for (int i = 0; i < autores.length; i++) {
-				autores[i] = autoresTemp[i] + 1;
-			}
-			
-			int editorial = editorList.getSelectedIndex();
-			if (editorial == -1) {
-				Navegador.mostrarMensajeError(VentanaLibrosCrear.this, "Error", "Debe de haber una editorial seleccionada");
-				return;
-			}
-			
-			Libro temp = new Libro(titulo, editorial+1, autores, paginas, ano, precio, isbn, idioma);
-			if (Database.revisarLibro(temp, VentanaLibrosCrear.this)) {
-				try {
-					LibroController.crearLibro(temp);
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
-				Navegador.mostrarMensajeInformacion(VentanaLibrosCrear.this, "Completado", "Libro creado");
-				limpiar();
-			}
+			crearLibro();
 		});
 		
 		this.addWindowListener(new WindowAdapter() {
@@ -215,5 +156,79 @@ public class VentanaLibrosCrear extends JFrame {
 		isbnTextField.setText(null);
 		codeTextField.setText(null);
 		actualizarListas();
+	}
+	
+	public void crearLibro() {
+		String titulo = titleTextField.getText().trim();
+		Integer paginas = 0;
+		try {
+			if (!(pageTextField.getText().trim().isBlank() || pageTextField.getText().trim().isEmpty() || pageTextField.getText().trim().equals(""))) {
+				paginas = Integer.parseInt(pageTextField.getText().trim());
+			}
+		}
+		catch (Exception ex) {
+			Navegador.mostrarMensajeError(VentanaLibrosCrear.this, "Error", "El número de páginas debe de ser un número");
+			return;
+		}
+		Integer ano = 0;
+		try {
+			if (!(yearTextField.getText().trim().isBlank() || yearTextField.getText().trim().isEmpty() || yearTextField.getText().trim().equals(""))) {
+				ano = Integer.parseInt(yearTextField.getText().trim());
+			}
+		}
+		catch (Exception ex) {
+			Navegador.mostrarMensajeError(VentanaLibrosCrear.this, "Error", "El año de publicación debe de ser un número");
+			return;
+		}
+		Double precio = 0D;
+		try {
+			if (!(costTextField.getText().trim().isBlank() || costTextField.getText().trim().isEmpty() || costTextField.getText().trim().equals(""))) {
+				precio = Double.parseDouble(costTextField.getText().trim());
+			}
+		}
+		catch (Exception ex) {
+			Navegador.mostrarMensajeError(VentanaLibrosCrear.this, "Error", "El precio debe de ser un número");
+			return;
+		}
+		Long isbn = 0L;
+		try {
+			if (!(isbnTextField.getText().trim().isBlank() || isbnTextField.getText().trim().isEmpty() || isbnTextField.getText().trim().equals(""))) {
+				isbn = Long.parseLong(isbnTextField.getText().trim());
+			}
+		}
+		catch (Exception ex) {
+			Navegador.mostrarMensajeError(VentanaLibrosCrear.this, "Error", "El ISBN debe de ser solo números");
+			return;
+		}
+		
+		String idioma = codeTextField.getText().trim();
+		
+		int[] autoresTemp = writerList.getSelectedIndices();
+		if (autoresTemp.length == 0) {
+			Navegador.mostrarMensajeError(VentanaLibrosCrear.this, "Error", "Debe de haber al menos 1 autor seleccionado");
+			return;
+		}
+		ArrayList<Integer> autores = new ArrayList<>();
+		for (int i = 0; i < autoresTemp.length; i++) {
+			autores.add(Integer.parseInt(writers.getElementAt(autoresTemp[i]).split(" - ")[0]));
+		}
+		
+		int editorial = editorList.getSelectedIndex();
+		if (editorial == -1) {
+			Navegador.mostrarMensajeError(VentanaLibrosCrear.this, "Error", "Debe de haber una editorial seleccionada");
+			return;
+		}
+		editorial = Integer.parseInt(editors.getElementAt(editorial).split(" - ")[0]);
+		
+		Libro temp = new Libro(titulo, editorial, autores.toArray(new Integer[0]), paginas, ano, precio, isbn, idioma);
+		if (Database.revisarLibro(temp, VentanaLibrosCrear.this)) {
+			try {
+				LibroController.crearLibro(temp);
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			Navegador.mostrarMensajeInformacion(VentanaLibrosCrear.this, "Completado", "Libro creado");
+			limpiar();
+		}
 	}
 }
