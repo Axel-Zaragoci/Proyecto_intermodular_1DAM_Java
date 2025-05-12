@@ -143,8 +143,13 @@ public class VentanaAutoresCrear extends JFrame {
 			if (year == false) {
 				date = null;
 			}
-			String[] iden = SeudoList.getSelectedValue().split(" - ");
-			int id = Integer.parseInt(iden[0]);
+			
+			int id = -1;
+			if (SeudoList.getSelectedIndex() != -1) {
+				String[] iden = SeudoList.getSelectedValue().split(" - ");
+				id = Integer.parseInt(iden[0]);
+			}
+			
 			Autor temp = new Autor(nameTextField.getText().trim(), date, nationTextField.getText().trim(), liveCheckBox.isSelected(), id);
 			
 			if (Database.revisarAutor(temp, VentanaAutoresCrear.this)) {

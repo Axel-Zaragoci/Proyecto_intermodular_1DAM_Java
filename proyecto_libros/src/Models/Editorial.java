@@ -20,7 +20,12 @@ public class Editorial {
 	private static ArrayList<Editorial> editoriales = new ArrayList<>();
 	
 	public static Editorial obtenerEditorial(int id) {
-		return editoriales.get(id);
+		for (Editorial e : editoriales) {
+			if (e.id == id) {
+				return e;
+			}
+		}
+		return null;
 	}
 	
 	public Editorial(String nombre, String pais, String ciudad, Integer anoFundacion, long telefono, String email) {

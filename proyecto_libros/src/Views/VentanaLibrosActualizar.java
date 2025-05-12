@@ -178,15 +178,14 @@ public class VentanaLibrosActualizar extends JFrame {
 					e1.printStackTrace();
 				}
 				Navegador.mostrarMensajeInformacion(VentanaLibrosActualizar.this, "Completado", "Libro actualizado");
-				limpiar();
+				cerrar();
 			}
 		});
 		
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				Navegador.dispatcher("Libros", true);
-				Navegador.obtenerVentana("Libros").setLocationRelativeTo(VentanaLibrosActualizar.this);
-				((VentanaLibros) Navegador.obtenerVentana("Libros")).actualizarTabla();
+				Navegador.dispatcher("Menu", true);
+				Navegador.obtenerVentana("Menu").setLocationRelativeTo(VentanaLibrosActualizar.this);
 			}
 		});
 	}
@@ -199,14 +198,11 @@ public class VentanaLibrosActualizar extends JFrame {
 		}
 	}
 	
-	public void limpiar() {
-		titleTextField.setText(null);
-		pageTextField.setText(null);
-		yearTextField.setText(null);
-		costTextField.setText(null);
-		isbnTextField.setText(null);
-		codeTextField.setText(null);
-		actualizarListas();
+	public void cerrar() {
+		this.setVisible(false);
+		Navegador.dispatcher("Libros", true);
+		Navegador.obtenerVentana("Libros").setLocationRelativeTo(VentanaLibrosActualizar.this);
+		((VentanaLibros) Navegador.obtenerVentana("Libros")).actualizarTabla();
 	}
 
 	public void obtenerDatos(Libro l) {

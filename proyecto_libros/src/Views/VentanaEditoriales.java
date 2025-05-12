@@ -57,12 +57,12 @@ public class VentanaEditoriales extends JFrame {
 		JButton updateButton = new JButton("Actualizar editorial");
 		updateButton.setBounds(165, 11, 145, 23);
 		updateButton.addActionListener(e -> {
-			int row = table.getSelectedRow();
-			if (row != -1) {
+			int id = (int) model.getValueAt(table.getSelectedRow(), 0);
+			if (id != -1) {
 				Navegador.agregarVentanas(new VentanaEditorialesActualizar());
 				((VentanaEditorialesActualizar) Navegador.obtenerVentana("Actualizar editorial")).setVisible(true);
 				VentanaEditoriales.this.setVisible(false);
-				((VentanaEditorialesActualizar) Navegador.obtenerVentana("Actualizar editorial")).setData(Editorial.obtenerEditorial(row));
+				((VentanaEditorialesActualizar) Navegador.obtenerVentana("Actualizar editorial")).setData(Editorial.obtenerEditorial(id));
 				return;
 			}
 			Navegador.mostrarMensajeError(VentanaEditoriales.this, "Error", "Selecciona una editorial");
