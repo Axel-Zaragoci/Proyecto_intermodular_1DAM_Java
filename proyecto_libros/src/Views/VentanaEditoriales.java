@@ -41,7 +41,7 @@ public class VentanaEditoriales extends JFrame {
 		panel.setLayout(null);
 		
 		JPanel buttonsPanel = new JPanel();
-		buttonsPanel.setBounds(10, 11, 685, 41);
+		buttonsPanel.setBounds(10, 11, 485, 41);
 		panel.add(buttonsPanel);
 		buttonsPanel.setLayout(null);
 		
@@ -97,6 +97,48 @@ public class VentanaEditoriales extends JFrame {
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setDefaultEditor(Object.class, null);
 		scrollPane.setViewportView(table);
+		
+		JPanel importPanel = new JPanel();
+		importPanel.setBounds(664, 11, 544, 55);
+		panel.add(importPanel);
+		importPanel.setLayout(null);
+		
+		JButton exportButton = new JButton("Exportar editorial");
+		exportButton.setBounds(389, 11, 145, 23);
+		importPanel.add(exportButton);
+		exportButton.addActionListener(e -> {
+			Editorial temp = Editorial.obtenerEditorial((int) model.getValueAt(table.getSelectedRow(), 0));
+			if (EditorialController.exportar(temp)) {
+				Navegador.mostrarMensajeInformacion(VentanaEditoriales.this, "Completado", "Autor exportado correctamente");
+			}
+			else {
+				Navegador.mostrarMensajeError(VentanaEditoriales.this, "Error", "Ha ocurrido un error");
+			}
+		});
+		
+		JButton exportAllButton = new JButton("Exportar todo");
+		exportAllButton.setBounds(234, 11, 145, 23);
+		importPanel.add(exportAllButton);
+		exportAllButton.addActionListener(e -> {
+			if (EditorialController.exportarTodo()) {
+				Navegador.mostrarMensajeInformacion(VentanaEditoriales.this, "Completado", "Editoriales exportadas correctamente");
+			}
+			else {
+				Navegador.mostrarMensajeError(VentanaEditoriales.this, "Error", "Ha ocurrido un error");
+			}
+		});
+		
+		JButton importButton = new JButton("Importar");
+		importButton.setBounds(79, 11, 145, 23);
+		importPanel.add(importButton);
+		importButton.addActionListener(e -> {
+			if (EditorialController.importar()) {
+				Navegador.mostrarMensajeInformacion(VentanaEditoriales.this, "Completado", "Editorial/es importada/s correctamente");
+				actualizarTabla();
+			}
+		});
+		
+		
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				Navegador.dispatcher("Menu", true);

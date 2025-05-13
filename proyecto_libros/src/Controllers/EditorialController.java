@@ -1,11 +1,18 @@
 package Controllers;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.stream.Stream;
 
 import Models.Editorial;
 
@@ -40,7 +47,6 @@ public class EditorialController {
 				}
 				
 				stmt.execute();
-				Navegador.mostrarMensajeInformacion(Navegador.obtenerVentana("Crear editorial"), "Completado", "Se ha insertado la editorial correctamente");
 			}
 			else {
 				Navegador.mostrarMensajeError(Navegador.obtenerVentana("Crear editorial"), "Error", "Ya existe una editorial con estos datos");
@@ -50,7 +56,6 @@ public class EditorialController {
 			e.printStackTrace();
 		}
 	}
-	
 	
 	public static ArrayList<Editorial> ver() {
 		ArrayList<Editorial> lista = new ArrayList<>();
@@ -113,5 +118,92 @@ public class EditorialController {
 			e.printStackTrace();
 			return false;
 		}
+	}
+
+	public static boolean exportar(Editorial e) {
+		try {
+			BufferedWriter buffer = new BufferedWriter(new FileWriter(new File (FilesController.obtenerRuta(Navegador.obtenerVentana("Editorial"))), true));
+			buffer.write(e.getId() + "");
+			buffer.write("|");
+			buffer.write(e.getNombre());
+			buffer.write("|");
+			buffer.write(e.getPais());
+			buffer.write("|");
+			buffer.write(e.getCiudad());
+			buffer.write("|");
+			buffer.write(e.getAnoFundacion() + "");
+			buffer.write("|");
+			buffer.write(e.getTelefono() + "");
+			buffer.write("|");
+			buffer.write(e.getEmail());
+			buffer.newLine();
+			buffer.flush();
+			buffer.close();
+			return true;
+		}
+		catch (IOException ex) {
+			ex.printStackTrace();
+			return false;
+		}
+	}
+
+	public static boolean exportarTodo() {
+		try {
+			BufferedWriter buffer = new BufferedWriter(new FileWriter(new File (FilesController.obtenerRuta(Navegador.obtenerVentana("Autores")))));
+			for (Editorial e : Editorial.actualizarLista()) {
+				buffer.write(e.getId() + "");
+				buffer.write("|");
+				buffer.write(e.getNombre());
+				buffer.write("|");
+				buffer.write(e.getPais() == null ? "" : e.getPais());
+				buffer.write("|");
+				buffer.write(e.getCiudad() == null ? "" : e.getCiudad());
+				buffer.write("|");
+				buffer.write(e.getAnoFundacion() == null ? "" : e.getAnoFundacion()+"");
+				buffer.write("|");
+				buffer.write(e.getTelefono() == 0 ? "" : e.getTelefono()+"");
+				buffer.write("|");
+				buffer.write(e.getEmail() == null ? "" : e.getEmail());
+				buffer.write("|");
+				buffer.newLine();
+			}
+			buffer.flush();
+			buffer.close();
+			return true;
+		}
+		catch (IOException ex) {
+			ex.printStackTrace();
+			return false;
+		}
+	}
+
+	public static boolean importar() {
+		Path file = Path.of(FilesController.obtenerRuta(Navegador.obtenerVentana("Editoriales")));
+		
+		try (Stream<String> lineas = Files.lines(file)) {
+			lineas.forEach(l -> {
+				String[] data = l.split("\\|", -1);
+				for(String d : data) {
+					System.out.println(d);
+				}
+				Editorial temp = new Editorial(Integer.parseInt(data[0]), data[1], data[2], data[3], Integer.parseInt(data[4]), Long.parseLong((data[5].equals("") ? "0" : data[5])), data[6]);
+				if (Database.revisarEditorial(temp, Navegador.obtenerVentana("Editoriales"))) {
+					EditorialController.crear(temp);
+				}
+				else {
+					return;
+				}
+			});
+			return true;
+		}
+		catch (IOException ex) {
+			Navegador.mostrarMensajeError(Navegador.obtenerVentana("Editorial"), "Error", "Ha ocurrido un error al interactuar con el archivo");
+			ex.printStackTrace();
+		}
+		catch (Exception ex) {
+			Navegador.mostrarMensajeError(Navegador.obtenerVentana("Editorial"), "Error", "Uno de los datos ha sido modificado y es inválido");
+			ex.printStackTrace();
+		}
+		return false;
 	}
 }
