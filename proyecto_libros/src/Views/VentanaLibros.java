@@ -76,6 +76,47 @@ public class VentanaLibros extends JFrame {
 		scrollPane.setViewportView(table);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setModel(model);
+		
+		JPanel importPanel = new JPanel();
+		importPanel.setBounds(987, 11, 391, 44);
+		contentPane.add(importPanel);
+		importPanel.setLayout(null);
+		
+		JButton importButton = new JButton("Importar");
+		importButton.setBounds(10, 11, 117, 23);
+		importPanel.add(importButton);
+		importButton.addActionListener(e -> {
+			if (LibroController.importar()) {
+				Navegador.mostrarMensajeInformacion(VentanaLibros.this, "Completado", "Libro/s importado/s correctamente");
+				actualizarTabla();
+			}
+		});
+		
+		JButton exportAllButton = new JButton("Exportar todo");
+		exportAllButton.setBounds(137, 11, 117, 23);
+		importPanel.add(exportAllButton);
+		exportAllButton.addActionListener(e -> {
+			if (LibroController.exportarTodo()) {
+				Navegador.mostrarMensajeInformacion(VentanaLibros.this, "Completado", "Libros exportados correctamente");
+			}
+			else {
+				Navegador.mostrarMensajeError(VentanaLibros.this, "Error", "Ha ocurrido un error");
+			}
+		});
+		
+		JButton exportButton = new JButton("Exportar libro");
+		exportButton.setBounds(264, 11, 117, 23);
+		importPanel.add(exportButton);
+		exportButton.addActionListener(e -> {
+			Libro temp = Libro.obtenerLibro((int) model.getValueAt(table.getSelectedRow(), 0));
+			if (LibroController.exportar(temp)) {
+				Navegador.mostrarMensajeInformacion(VentanaLibros.this, "Completado", "Libro exportado correctamente");
+			}
+			else {
+				Navegador.mostrarMensajeError(VentanaLibros.this, "Error", "Ha ocurrido un error");
+			}
+		});
+
 		table.setDefaultEditor(Object.class, null);
 		
 		this.addWindowListener(new WindowAdapter() {

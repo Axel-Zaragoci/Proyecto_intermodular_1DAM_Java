@@ -109,7 +109,7 @@ public class VentanaEditoriales extends JFrame {
 		exportButton.addActionListener(e -> {
 			Editorial temp = Editorial.obtenerEditorial((int) model.getValueAt(table.getSelectedRow(), 0));
 			if (EditorialController.exportar(temp)) {
-				Navegador.mostrarMensajeInformacion(VentanaEditoriales.this, "Completado", "Autor exportado correctamente");
+				Navegador.mostrarMensajeInformacion(VentanaEditoriales.this, "Completado", "Editorial exportada correctamente");
 			}
 			else {
 				Navegador.mostrarMensajeError(VentanaEditoriales.this, "Error", "Ha ocurrido un error");

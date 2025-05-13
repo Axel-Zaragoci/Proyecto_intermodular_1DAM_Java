@@ -183,9 +183,6 @@ public class EditorialController {
 		try (Stream<String> lineas = Files.lines(file)) {
 			lineas.forEach(l -> {
 				String[] data = l.split("\\|", -1);
-				for(String d : data) {
-					System.out.println(d);
-				}
 				Editorial temp = new Editorial(Integer.parseInt(data[0]), data[1], data[2], data[3], Integer.parseInt(data[4]), Long.parseLong((data[5].equals("") ? "0" : data[5])), data[6]);
 				if (Database.revisarEditorial(temp, Navegador.obtenerVentana("Editoriales"))) {
 					EditorialController.crear(temp);
