@@ -106,7 +106,7 @@ public class VentanaLibros extends JFrame {
 		for (Libro libro : libros) {
 			String autores = "";
 			for (Integer id : libro.getAutor()) {
-				autores = autores + Autor.obtenerAutor(id-1).getNombre() + ", ";
+				autores = autores + Autor.obtenerAutor(id).getNombre() + ", ";
 			}
 			Object paginas = libro.getPaginas() == 0 ? "" : libro.getPaginas();
 			Object publicacion = libro.getPublicacion() == 0 ? "" : libro.getPublicacion();

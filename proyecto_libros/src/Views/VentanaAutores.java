@@ -61,16 +61,18 @@ public class VentanaAutores extends JFrame {
 		updateButton.setBounds(150, 11, 117, 23);
 		panel.add(updateButton);
 		updateButton.addActionListener(e -> {
-			int row = table.getSelectedRow();
-			if (row != -1) {
+			try {
+				int id = (int) model.getValueAt(table.getSelectedRow(), 0);
 				Navegador.agregarVentanas(new VentanaAutoresActualizar());
 				Navegador.dispatcher("Actualizar autor", true);
 				Navegador.dispatcher(getTitle(), false);
 				((VentanaAutoresActualizar) Navegador.obtenerVentana("Actualizar autor")).actualizarLista();
-				((VentanaAutoresActualizar) Navegador.obtenerVentana("Actualizar autor")).setDatos(Autor.obtenerAutor(row));
+				((VentanaAutoresActualizar) Navegador.obtenerVentana("Actualizar autor")).setDatos(Autor.obtenerAutor(id));
 				return;
 			}
+			catch (Exception ex) {
 			Navegador.mostrarMensajeError(VentanaAutores.this, "Error", "Selecciona el autor a actualizar");
+			}
 		});
 		
 		JScrollPane scrollPane = new JScrollPane();
@@ -82,6 +84,47 @@ public class VentanaAutores extends JFrame {
 		scrollPane.setViewportView(table);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setModel(model);
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setBounds(819, 11, 409, 39);
+		contentPane.add(panel_1);
+		panel_1.setLayout(null);
+		
+		JButton exportButton = new JButton("Exportar autor");
+		exportButton.setBounds(268, 11, 119, 23);
+		panel_1.add(exportButton);
+		exportButton.addActionListener(e -> {
+			Autor temp = Autor.obtenerAutor((int) model.getValueAt(table.getSelectedRow(), 0));
+			if (AutorController.exportar(temp)) {
+				Navegador.mostrarMensajeInformacion(VentanaAutores.this, "Completado", "Autor exportado correctamente");
+			}
+			else {
+				Navegador.mostrarMensajeError(VentanaAutores.this, "Error", "Ha ocurrido un error");
+			}
+		});
+		
+		JButton exportAll = new JButton("Exportar todo");
+		exportAll.setBounds(139, 11, 119, 23);
+		panel_1.add(exportAll);
+		exportAll.addActionListener(e -> {
+			if (AutorController.exportarTodo()) {
+				Navegador.mostrarMensajeInformacion(VentanaAutores.this, "Completado", "Autores exportados correctamente");
+			}
+			else {
+				Navegador.mostrarMensajeError(VentanaAutores.this, "Error", "Ha ocurrido un error");
+			}
+		});
+		
+		JButton importButton = new JButton("Importar");
+		importButton.setBounds(10, 11, 119, 23);
+		panel_1.add(importButton);
+		importButton.addActionListener(e -> {
+			if (AutorController.importar()) {
+				Navegador.mostrarMensajeInformacion(VentanaAutores.this, "Completado", "Autor/es importado/s correctamente");
+				actualizarTabla();
+			}
+		});
+		
 		table.setDefaultEditor(Object.class, null);
 		
 		this.addWindowListener(new WindowAdapter() {
