@@ -6,7 +6,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-public class Files {
+public class FilesController {
 	public static String obtenerRuta(JFrame ventana) {
 		File current = new File("C:\\Users\\axelz\\OneDrive\\Escritorio\\DAM\\Proyecto intermodular\\Proyecto 3er trimestre\\proyecto_java\\proyecto_libros\\data");
 		JFileChooser chooser = new JFileChooser(current);
