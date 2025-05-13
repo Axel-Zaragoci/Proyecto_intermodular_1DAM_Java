@@ -14,6 +14,15 @@ import Models.Libro;
 import Config.config;
 
 public class Database {
+	public static boolean revisarConexion(String user, String passwd) {
+		try {
+			DriverManager.getConnection(config.getUrl(), user, passwd);
+			return true;
+		} catch (SQLException e) {
+			return false;
+		}
+	}
+	
     public static Connection conectar() {
     	try {
 			return DriverManager.getConnection(config.getUrl(), config.getUsuario(), config.getContraseña());
@@ -114,7 +123,7 @@ public class Database {
     		return false;
     	}
     	
-    	if(autor.getSeudonimo() != -1) {
+    	if(autor.getSeudonimo() != null) {
         	String sqlAutorID = "SELECT MAX(id) AS id FROM autor";
     		try (Connection con = Database.conectar();
     			 PreparedStatement stmtAutorID = con.prepareStatement(sqlAutorID)) {

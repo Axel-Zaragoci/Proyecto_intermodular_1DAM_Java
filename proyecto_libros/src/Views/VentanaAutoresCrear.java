@@ -153,6 +153,7 @@ public class VentanaAutoresCrear extends JFrame {
 			Autor temp = new Autor(nameTextField.getText().trim(), date, nationTextField.getText().trim(), liveCheckBox.isSelected(), id);
 			
 			if (Database.revisarAutor(temp, VentanaAutoresCrear.this)) {
+				Navegador.mostrarMensajeInformacion(VentanaAutoresCrear.this, "Confirmado", "Se ha insertado el autor");
 				AutorController.crear(temp);
 				limpiar();
 			}

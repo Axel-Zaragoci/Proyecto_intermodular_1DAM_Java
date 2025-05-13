@@ -1,9 +1,17 @@
 package Config;
 
 public class config {
-	  private static String url = "jdbc:postgresql://localhost:5432/Proyecto";
-    private static String usuario = "postgres";
-    private static String contraseña = "1234";
+	private static String url = "jdbc:postgresql://localhost:5432/Proyecto";
+    private static String usuario;
+    private static String contraseña;
+    
+    public static void setUsuario(String user) {
+    	usuario = user;
+    }
+    
+    public static void setPasswd(String passwd) {
+    	contraseña = passwd;
+    }
     
     public static String getUrl() {
     	return url;

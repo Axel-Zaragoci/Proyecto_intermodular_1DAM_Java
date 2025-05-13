@@ -36,7 +36,12 @@ public class Autor {
 	}
 	
 	public static Autor obtenerAutor(int id) {
-		return autores.get(id);
+		for (Autor a : autores) {
+			if (a.id == id) {
+				return a;
+			}
+		}
+		return null;
 	}
 	
 	public static String obtenerVida(boolean v) {
@@ -57,4 +62,5 @@ public class Autor {
 		autores.sort(Comparator.comparing(Autor::getId));
 		return autores;
 	}
+
 }

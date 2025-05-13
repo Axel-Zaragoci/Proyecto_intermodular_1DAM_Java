@@ -123,7 +123,7 @@ public class VentanaEditorialesActualizar extends JFrame {
 			Editorial temp = new Editorial(id, nameTextField.getText().trim(), nationTextField.getText().trim(), cityTextField.getText().trim(), anoFundacion, telefono, emailTextField.getText().trim());
 			if (Database.revisarEditorial(temp, VentanaEditorialesActualizar.this)) {
 				EditorialController.actualizar(temp);
-				limpiar();
+				salir();
 			}
 		});
 		
@@ -136,13 +136,11 @@ public class VentanaEditorialesActualizar extends JFrame {
 		});
 	}
 	
-	public void limpiar() {
-		nameTextField.setText(null);
-		nationTextField.setText(null);
-		cityTextField.setText(null);
-		yearTextField.setText(null);
-		phoneTextField.setText(null);
-		emailTextField.setText(null);
+	public void salir() {
+		this.setVisible(false);
+		Navegador.dispatcher("Editoriales", true);
+		Navegador.obtenerVentana("Editoriales").setLocationRelativeTo(VentanaEditorialesActualizar.this);
+		((VentanaEditoriales) Navegador.obtenerVentana("Editoriales")).actualizarTabla();
 	}
 	
 	public void setData(Editorial e) {

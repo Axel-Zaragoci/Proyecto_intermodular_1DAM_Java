@@ -113,7 +113,7 @@ public class VentanaLibrosActualizar extends JFrame {
 		writerScrollPane.setViewportView(writerList);
 		
 		JButton updateButton = new JButton("Actualizar libro");
-		updateButton.setBounds(10, 182, 104, 23);
+		updateButton.setBounds(10, 182, 138, 23);
 		formPanel.add(updateButton);
 		updateButton.addActionListener( e -> {
 			String titulo = titleTextField.getText().trim();
@@ -184,8 +184,9 @@ public class VentanaLibrosActualizar extends JFrame {
 		
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				Navegador.dispatcher("Menu", true);
-				Navegador.obtenerVentana("Menu").setLocationRelativeTo(VentanaLibrosActualizar.this);
+				Navegador.dispatcher("Libros", true);
+				Navegador.obtenerVentana("Libros").setLocationRelativeTo(VentanaLibrosActualizar.this);
+				((VentanaLibros) Navegador.obtenerVentana("Libros")).actualizarTabla();
 			}
 		});
 	}

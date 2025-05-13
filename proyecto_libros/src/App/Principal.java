@@ -1,12 +1,11 @@
 package App;
 import Controllers.Navegador;
-import Views.VentanaPrincipal;
+import Views.VentanaLogin;
+
 
 public class Principal {
-
 	public static void main(String[] args) {
-		VentanaPrincipal v = new VentanaPrincipal();
-		Navegador.agregarVentanas(v);
-		Navegador.dispatcher("Menu", true);
+		Navegador.agregarVentanas(new VentanaLogin());
+		Navegador.dispatcher("Iniciar sesión", true);
 	}
 }
