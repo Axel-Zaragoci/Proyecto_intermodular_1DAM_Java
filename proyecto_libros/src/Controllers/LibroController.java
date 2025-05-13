@@ -1,10 +1,18 @@
 package Controllers;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.stream.Stream;
 
 import Models.Libro;
 
@@ -181,5 +189,121 @@ public class LibroController {
 		con.setAutoCommit(true);
 		con.close();
 		return true;
+	}
+
+		public static boolean exportar(Libro l) {
+		try {
+			BufferedWriter buffer = new BufferedWriter(new FileWriter(new File (FilesController.obtenerRuta(Navegador.obtenerVentana("Editorial"))), true));
+			buffer.write(l.getId() + "");
+			buffer.write("|");
+			buffer.write(l.getTitulo());
+			buffer.write("|");
+			buffer.write(l.getEditorial() + "");
+			buffer.write("|");
+			String autores = "";
+			for (int a : l.getAutor()) {
+				autores += a + ",";
+			}
+			buffer.write(autores.substring(0, autores.length()-1));
+			buffer.write("|");
+			buffer.write(l.getPaginas() == null ? "0" : l.getPaginas()+"");
+			buffer.write("|");
+			buffer.write(l.getPublicacion() == null ? "0" : l.getPublicacion()+"");
+			buffer.write("|");
+			buffer.write(l.getPrecio() == null ? "0" : l.getPrecio()+"");
+			buffer.write("|");
+			buffer.write(l.getIsbn() == null ? "0" : l.getIsbn()+"");
+			buffer.write("|");
+			buffer.write(l.getIdioma());
+			buffer.newLine();
+			buffer.flush();
+			buffer.close();
+			return true;
+		}
+		catch (IOException ex) {
+			ex.printStackTrace();
+			return false;
+		}
+	}
+
+	public static boolean exportarTodo() {
+		try {
+			BufferedWriter buffer = new BufferedWriter(new FileWriter(new File (FilesController.obtenerRuta(Navegador.obtenerVentana("Autores")))));
+			for (Libro l : Libro.actualizarLista()) {
+				buffer.write(l.getId() + "");
+				buffer.write("|");
+				buffer.write(l.getTitulo());
+				buffer.write("|");
+				buffer.write(l.getEditorial() + "");
+				buffer.write("|");
+				String autores = "";
+				for (int a : l.getAutor()) {
+					autores += a + ",";
+				}
+				buffer.write(autores.substring(0, autores.length()-1));
+				buffer.write("|");
+				buffer.write(l.getPaginas() == null ? "0" : l.getPaginas()+"");
+				buffer.write("|");
+				buffer.write(l.getPublicacion() == null ? "0" : l.getPublicacion()+"");
+				buffer.write("|");
+				buffer.write(l.getPrecio() == null ? "0" : l.getPrecio()+"");
+				buffer.write("|");
+				buffer.write(l.getIsbn() == null ? "0" : l.getIsbn()+"");
+				buffer.write("|");
+				buffer.write(l.getIdioma());
+				buffer.newLine();
+			}
+			buffer.flush();
+			buffer.close();
+			return true;
+		}
+		catch (IOException ex) {
+			ex.printStackTrace();
+			return false;
+		}
+	}
+
+	public static boolean importar() {
+		Path file = Path.of(FilesController.obtenerRuta(Navegador.obtenerVentana("Editoriales")));
+		
+		try (Stream<String> lineas = Files.lines(file)) {
+			lineas.forEach(l -> {
+				String[] data = l.split("\\|", -1);
+				int[] autoresStream = Arrays.stream(data[3].split(",")).mapToInt(e -> Integer.parseInt(e)).toArray();
+				Integer[] autores = new Integer[autoresStream.length];
+				for (int i = 0; i < autores.length; i++) {
+					autores[i] = autoresStream[i];
+				}
+				Libro temp = new Libro(Integer.parseInt(data[0]), 
+				data[1], 
+				Integer.parseInt(data[2]), 
+				autores, 
+				Integer.parseInt(data[4]), 
+				Integer.parseInt(data[5]), 
+				Double.parseDouble(data[6]), 
+				Long.parseLong(data[7]), 
+				data[8]);
+				if (Database.revisarLibro(temp, Navegador.obtenerVentana("Libros"))) {
+					try {
+						LibroController.crearLibro(temp);
+					} catch (SQLException e1) {
+						Navegador.mostrarMensajeError(Navegador.obtenerVentana("Libros"), "Error", "Ha ocurrido un error de conexión con la base de datos");
+					}
+				}
+				else {
+					return;
+				}
+			});
+			return true;
+		}
+		catch (IOException ex) {
+			Navegador.mostrarMensajeError(Navegador.obtenerVentana("Editorial"), "Error", "Ha ocurrido un error al interactuar con el archivo");
+			ex.printStackTrace();
+		}
+		catch (Exception ex) {
+			Navegador.mostrarMensajeError(Navegador.obtenerVentana("Editorial"), "Error", "Uno de los datos ha sido modificado y es inválido");
+			ex.printStackTrace();
+		}
+		return false;
 	}
 }

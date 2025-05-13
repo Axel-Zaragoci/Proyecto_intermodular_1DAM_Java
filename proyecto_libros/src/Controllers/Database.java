@@ -14,6 +14,15 @@ import Models.Libro;
 import Config.config;
 
 public class Database {
+	public static boolean revisarConexion(String user, String passwd) {
+		try {
+			DriverManager.getConnection(config.getUrl(), user, passwd);
+			return true;
+		} catch (SQLException e) {
+			return false;
+		}
+	}
+	
     public static Connection conectar() {
     	try {
 			return DriverManager.getConnection(config.getUrl(), config.getUsuario(), config.getContraseña());

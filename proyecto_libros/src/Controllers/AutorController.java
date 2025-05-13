@@ -1,5 +1,11 @@
 package Controllers;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -7,10 +13,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.stream.Stream;
 
 import Models.Autor;
 import Views.VentanaAutores;
-import Views.*;
+import Views.VentanaAutoresCrear;
 
 public class AutorController {
 	public static boolean crear(Autor autor) {
@@ -23,7 +30,7 @@ public class AutorController {
 			stmtBusqueda.setDate(2, time);
 			stmtBusqueda.setString(3, autor.getNacionalidad());
 			stmtBusqueda.setString(4, autor.isVivo() ? "Vivo" : "Fallecido");
-			if (autor.getSeudonimo() == -1) {
+			if (autor.getSeudonimo() == null) {
 				stmtBusqueda.setObject(5, null);
 			}
 			else {
@@ -48,7 +55,7 @@ public class AutorController {
 			stmt.setDate(2, time);
 			stmt.setString(3, autor.getNacionalidad());
 			stmt.setString(4, autor.isVivo()?"Vivo":"Fallecido");
-			if (autor.getSeudonimo() == -1) {
+			if (autor.getSeudonimo() == null) {
 				stmt.setObject(5, null);
 			}
 			else {
@@ -57,8 +64,9 @@ public class AutorController {
 			
 			stmt.execute();
 			
-			Navegador.mostrarMensajeInformacion(Navegador.obtenerVentana("Crear autor"), "Confirmado", "Se ha insertado el autor");
-			((VentanaAutoresCrear) Navegador.obtenerVentana("Crear autor")).actualizarLista();
+			if (Navegador.obtenerVentana("Crear autor") != null) {
+				((VentanaAutoresCrear) Navegador.obtenerVentana("Crear autor")).actualizarLista();
+			}
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -143,6 +151,85 @@ public class AutorController {
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
+		}
+		return false;
+	}
+
+	public static boolean exportar(Autor a) {
+		try {
+			BufferedWriter buffer = new BufferedWriter(new FileWriter(new File (FilesController.obtenerRuta(Navegador.obtenerVentana("Autores"))), true));
+			buffer.write(a.getId() + "");
+			buffer.write("|");
+			buffer.write(a.getNombre());
+			buffer.write("|");
+			buffer.write(a.getFechaNacimiento());
+			buffer.write("|");
+			buffer.write(a.getNacionalidad());
+			buffer.write("|");
+			buffer.write(a.isVivo() + "");
+			buffer.write("|");
+			buffer.write(a.getSeudonimo() + "");
+			buffer.newLine();
+			buffer.flush();
+			buffer.close();
+			return true;
+		}
+		catch (IOException ex) {
+			ex.printStackTrace();
+			return false;
+		}
+	}
+
+	public static boolean exportarTodo() {
+		try {
+			BufferedWriter buffer = new BufferedWriter(new FileWriter(new File (FilesController.obtenerRuta(Navegador.obtenerVentana("Autores")))));
+			for (Autor a : Autor.actualizarLista()) {
+				buffer.write(a.getId() + "");
+				buffer.write("|");
+				buffer.write(a.getNombre());
+				buffer.write("|");
+				buffer.write(((a.getFechaNacimiento() == null ? "" : a.getFechaNacimiento())+"").length() == 0 ? "" : a.getFechaNacimiento());
+				buffer.write("|");
+				buffer.write(((a.getNacionalidad() == null ? "" : a.getNacionalidad())+"").length() == 0 ? "" : a.getNacionalidad());
+				buffer.write("|");
+				buffer.write(a.isVivo() + "");
+				buffer.write("|");
+				buffer.write(a.getSeudonimo() + "");
+				buffer.newLine();
+			}
+			buffer.flush();
+			buffer.close();
+			return true;
+		}
+		catch (IOException ex) {
+			ex.printStackTrace();
+			return false;
+		}
+	}
+
+	public static boolean importar() {
+		Path file = Path.of(FilesController.obtenerRuta(Navegador.obtenerVentana("Autores")));
+		
+		try (Stream<String> lineas = Files.lines(file)) {
+			lineas.forEach(l -> {
+				String[] data = l.split("\\|");
+				Autor temp = new Autor(Integer.parseInt(data[0]), data[1], data[2].equals("") ? null : data[2], data[3], (data[4].equals("true") ? true : false), (Integer.parseInt(data[5]) == 0 ? null : Integer.parseInt(data[5])));
+				if (Database.revisarAutor(temp, Navegador.obtenerVentana("Autores"))) {
+					AutorController.crear(temp);
+				}
+				else {
+					return;
+				}
+			});
+			return true;
+		}
+		catch (IOException ex) {
+			Navegador.mostrarMensajeError(Navegador.obtenerVentana("Autores"), "Error", "Ha ocurrido un error al interactuar con el archivo");
+			ex.printStackTrace();
+		}
+		catch (Exception ex) {
+			Navegador.mostrarMensajeError(Navegador.obtenerVentana("Autores"), "Error", "Uno de los datos ha sido modificado y es inválido");
+			ex.printStackTrace();
 		}
 		return false;
 	}

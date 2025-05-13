@@ -9,6 +9,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import Config.config;
+import Controllers.Database;
 import Controllers.Navegador;
 
 public class VentanaLogin extends JFrame {
@@ -62,7 +63,7 @@ public class VentanaLogin extends JFrame {
 		panel.add(loginButton);
 	}
 	
-	void revision() {
+	private void revision() {
 		if (userTextField.getText().trim().isBlank() || userTextField.getText().trim().isEmpty() || userTextField.getText().trim().equals("")) {
 			Navegador.mostrarMensajeError(VentanaLogin.this, "Error", "Debes indicar un usuario");
 			return;
@@ -72,10 +73,12 @@ public class VentanaLogin extends JFrame {
 			return;
 		}
 		String passwd = String.valueOf(passwdTextField.getPassword());
-		if (userTextField.getText().trim().equalsIgnoreCase(config.getUsuario()) && passwd.equals(config.getContraseña())) {
+		if (Database.revisarConexion(userTextField.getText().trim().toLowerCase(), passwd)) {
 			Navegador.agregarVentanas(new VentanaPrincipal());
 			Navegador.dispatcher("Menu", true);
 			Navegador.dispatcher(getTitle(), false);
+			config.setUsuario(userTextField.getText().trim().toLowerCase());
+			config.setPasswd(passwd);
 			return;
 		}
 		Navegador.mostrarMensajeError(VentanaLogin.this, "Error", "Datos incorrectos");

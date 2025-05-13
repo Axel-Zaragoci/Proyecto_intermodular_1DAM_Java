@@ -122,6 +122,7 @@ public class VentanaEditorialesCrear extends JFrame {
 			Editorial temp = new Editorial(nameTextField.getText().trim(), nationTextField.getText().trim(), cityTextField.getText().trim(), anoFundacion, telefono, emailTextField.getText().trim());
 			if (Database.revisarEditorial(temp, VentanaEditorialesCrear.this)) {
 				EditorialController.crear(temp);
+				Navegador.mostrarMensajeInformacion(Navegador.obtenerVentana("Crear editorial"), "Completado", "Se ha insertado la editorial correctamente");
 				limpiar();
 			}
 		});
