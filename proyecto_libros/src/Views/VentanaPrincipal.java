@@ -1,5 +1,6 @@
 package Views;
 
+import java.awt.Color;
 import java.awt.Font;
 
 import javax.swing.JButton;
@@ -8,6 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
 import Controllers.Navegador;
 
@@ -25,15 +27,18 @@ public class VentanaPrincipal extends JFrame {
 		
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		contentPane.setBackground(new Color(255, 255, 255));
 		
 		JPanel panel = new JPanel();
 		panel.setBounds(10, 11, 418, 243);
 		contentPane.add(panel);
 		panel.setLayout(null);
+		panel.setBackground(contentPane.getBackground());
 		
 		JLabel tituloLabel = new JLabel("Elige que quieres ver");
 		tituloLabel.setBounds(0, 39, 418, 23);
 		tituloLabel.setFont(new Font("Arial", Font.BOLD, 20));
+		tituloLabel.setForeground(new Color(17, 57, 127));
 		tituloLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(tituloLabel);		
 		
@@ -50,6 +55,10 @@ public class VentanaPrincipal extends JFrame {
 				Navegador.dispatcher("Libros", true);
 				Navegador.dispatcher("Menu", false);
 		});
+		LibroButton.setBackground(new Color(34, 114, 255));
+		LibroButton.setForeground(new Color(29, 29, 29));
+		LibroButton.setBorder(new LineBorder(new Color(61, 80, 214), 1, true));
+		LibroButton.setFocusPainted(false);
 		
 		JButton AutoresButton = new JButton("Autores");
 		AutoresButton.setBounds(157, 120, 110, 27);
@@ -62,6 +71,10 @@ public class VentanaPrincipal extends JFrame {
 				Navegador.dispatcher("Autores", true);
 				Navegador.dispatcher("Menu", false);
 		});
+		AutoresButton.setBackground(new Color(34, 114, 255));
+		AutoresButton.setForeground(new Color(29, 29, 29));
+		AutoresButton.setBorder(new LineBorder(new Color(61, 80, 214), 1, true));
+		AutoresButton.setFocusPainted(false);
 		
 		JButton EditorialButton = new JButton("Editoriales");
 		EditorialButton.setBounds(298, 120, 110, 27);
@@ -74,5 +87,9 @@ public class VentanaPrincipal extends JFrame {
 				Navegador.dispatcher("Editoriales", true);
 				Navegador.dispatcher("Menu", false);
 		});
+		EditorialButton.setBackground(new Color(34, 114, 255));
+		EditorialButton.setForeground(new Color(29, 29, 29));
+		EditorialButton.setBorder(new LineBorder(new Color(61, 80, 214), 1, true));
+		EditorialButton.setFocusPainted(false);
 	}
 }
