@@ -1,5 +1,6 @@
 package Views;
 
+import java.awt.Color;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.SQLException;
@@ -13,6 +14,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 
 import Controllers.LibroController;
@@ -37,11 +39,13 @@ public class VentanaLibros extends JFrame {
 		
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		contentPane.setBackground(new Color(255, 255, 255));
 		
 		JPanel panel = new JPanel();
 		panel.setBounds(10, 11, 419, 39);
 		contentPane.add(panel);
 		panel.setLayout(null);
+		panel.setBackground(contentPane.getBackground());
 		
 		JButton createButton = new JButton("Crear libro");
 		createButton.addActionListener(e -> {
@@ -52,6 +56,10 @@ public class VentanaLibros extends JFrame {
 		});
 		createButton.setBounds(10, 11, 117, 23);
 		panel.add(createButton);
+		createButton.setBackground(new Color(34, 114, 255));
+		createButton.setForeground(new Color(29, 29, 29));
+		createButton.setBorder(new LineBorder(new Color(61, 80, 214), 1, true));
+		createButton.setFocusPainted(false);
 		
 		JButton deleteButton = new JButton("Eliminar libro");
 		deleteButton.setBounds(292, 11, 117, 23);
@@ -59,6 +67,10 @@ public class VentanaLibros extends JFrame {
 		deleteButton.addActionListener(e -> {
 			VentanaLibros.this.eliminarLibro();
 		});
+		deleteButton.setBackground(new Color(34, 114, 255));
+		deleteButton.setForeground(new Color(29, 29, 29));
+		deleteButton.setBorder(new LineBorder(new Color(61, 80, 214), 1, true));
+		deleteButton.setFocusPainted(false);
 		
 		JButton updateButton = new JButton("Editar libro");
 		updateButton.setBounds(150, 11, 117, 23);
@@ -66,6 +78,10 @@ public class VentanaLibros extends JFrame {
 		updateButton.addActionListener(e -> {
 			actualizar();
 		});
+		updateButton.setBackground(new Color(34, 114, 255));
+		updateButton.setForeground(new Color(255, 255, 255));
+		updateButton.setBorder(new LineBorder(new Color(61, 80, 214), 1, true));
+		updateButton.setFocusPainted(false);
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(20, 61, 1358, 593);
@@ -81,6 +97,7 @@ public class VentanaLibros extends JFrame {
 		importPanel.setBounds(987, 11, 391, 44);
 		contentPane.add(importPanel);
 		importPanel.setLayout(null);
+		importPanel.setBackground(contentPane.getBackground());
 		
 		JButton importButton = new JButton("Importar");
 		importButton.setBounds(10, 11, 117, 23);
@@ -91,6 +108,10 @@ public class VentanaLibros extends JFrame {
 				actualizarTabla();
 			}
 		});
+		importButton.setBackground(new Color(34, 114, 255));
+		importButton.setForeground(new Color(29, 29, 29));
+		importButton.setBorder(new LineBorder(new Color(61, 80, 214), 1, true));
+		importButton.setFocusPainted(false);
 		
 		JButton exportAllButton = new JButton("Exportar todo");
 		exportAllButton.setBounds(137, 11, 117, 23);
@@ -103,6 +124,10 @@ public class VentanaLibros extends JFrame {
 				Navegador.mostrarMensajeError(VentanaLibros.this, "Error", "Ha ocurrido un error");
 			}
 		});
+		exportAllButton.setBackground(new Color(34, 114, 255));
+		exportAllButton.setForeground(new Color(29, 29, 29));
+		exportAllButton.setBorder(new LineBorder(new Color(61, 80, 214), 1, true));
+		exportAllButton.setFocusPainted(false);
 		
 		JButton exportButton = new JButton("Exportar libro");
 		exportButton.setBounds(264, 11, 117, 23);
@@ -116,6 +141,10 @@ public class VentanaLibros extends JFrame {
 				Navegador.mostrarMensajeError(VentanaLibros.this, "Error", "Ha ocurrido un error");
 			}
 		});
+		exportButton.setBackground(new Color(34, 114, 255));
+		exportButton.setForeground(new Color(29, 29, 29));
+		exportButton.setBorder(new LineBorder(new Color(61, 80, 214), 1, true));
+		exportButton.setFocusPainted(false);
 
 		table.setDefaultEditor(Object.class, null);
 		

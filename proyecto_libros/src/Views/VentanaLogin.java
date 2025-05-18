@@ -98,7 +98,7 @@ public class VentanaLogin extends JFrame {
 		loginButton.setBounds(10, 174, 130, 23);
 		panel.add(loginButton);
 		loginButton.setBackground(new Color(34, 114, 255));
-		loginButton.setForeground(new Color(29, 29, 29));
+		loginButton.setForeground(new Color(0, 0, 0));
 		loginButton.setBorder(new LineBorder(new Color(61, 80, 214), 1, true));
 		loginButton.setFocusPainted(false);
 	}
