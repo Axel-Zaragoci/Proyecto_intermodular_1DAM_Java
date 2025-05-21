@@ -57,8 +57,9 @@ public class VentanaEditoriales extends JFrame {
 		JButton updateButton = new JButton("Actualizar editorial");
 		updateButton.setBounds(165, 11, 145, 23);
 		updateButton.addActionListener(e -> {
-			int id = (int) model.getValueAt(table.getSelectedRow(), 0);
+			int id = table.getSelectedRow();
 			if (id != -1) {
+				id = (int) model.getValueAt(table.getSelectedRow(), 0);
 				Navegador.agregarVentanas(new VentanaEditorialesActualizar());
 				((VentanaEditorialesActualizar) Navegador.obtenerVentana("Actualizar editorial")).setVisible(true);
 				VentanaEditoriales.this.setVisible(false);
@@ -107,13 +108,17 @@ public class VentanaEditoriales extends JFrame {
 		exportButton.setBounds(389, 11, 145, 23);
 		importPanel.add(exportButton);
 		exportButton.addActionListener(e -> {
-			Editorial temp = Editorial.obtenerEditorial((int) model.getValueAt(table.getSelectedRow(), 0));
-			if (EditorialController.exportar(temp)) {
-				Navegador.mostrarMensajeInformacion(VentanaEditoriales.this, "Completado", "Editorial exportada correctamente");
+			if (table.getSelectedRow() != -1) {
+				Editorial temp = Editorial.obtenerEditorial((int) model.getValueAt(table.getSelectedRow(), 0));
+				if (EditorialController.exportar(temp)) {
+					Navegador.mostrarMensajeInformacion(VentanaEditoriales.this, "Completado", "Editorial exportada correctamente");
+				}
+				else {
+					Navegador.mostrarMensajeError(VentanaEditoriales.this, "Error", "Ha ocurrido un error");
+				}
+				return;
 			}
-			else {
-				Navegador.mostrarMensajeError(VentanaEditoriales.this, "Error", "Ha ocurrido un error");
-			}
+			Navegador.mostrarMensajeError(VentanaEditoriales.this, "Error", "Debes seleccionar la editorial a exportar");
 		});
 		
 		JButton exportAllButton = new JButton("Exportar todo");

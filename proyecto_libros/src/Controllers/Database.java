@@ -33,7 +33,7 @@ public class Database {
     }
     
     public static boolean revisarLibro(Libro libro, JFrame ventana) {
-    	if (libro.getTitulo() == null || libro.getTitulo().length() > 75) {
+    	if (libro.getTitulo() == null || libro.getTitulo().length() > 75 || libro.getTitulo().length() == 0) {
     		Navegador.mostrarMensajeError(ventana, "Error", "El titulo no puede estar vacío ni tener más de 75 caracteres. Ahora mismo tiene " + libro.getTitulo().length());
     		return false;
     	}
@@ -41,9 +41,11 @@ public class Database {
     		Navegador.mostrarMensajeError(ventana, "Error", "El libro debe de tener más de 0 páginas y menos de 9999 páginas");
     		return false;
     	}
-    	if (libro.getPublicacion() > 9999) {
-    		Navegador.mostrarMensajeError(ventana, "Error", "El libro debe de tener un año de publicación válido");
-    		return false;
+    	if (libro.getPublicacion() != null) {
+    		if (libro.getPublicacion() > 9999) {
+        		Navegador.mostrarMensajeError(ventana, "Error", "El libro debe de tener un año de publicación válido");
+        		return false;
+        	}
     	}
     	String sqlAutorID = "SELECT MAX(id) AS id FROM autor";
 		try (Connection con = Database.conectar();
@@ -96,7 +98,7 @@ public class Database {
 			}
 		}
 		
-		if (libro.getIdioma() == null || libro.getIdioma().length() > 4) {
+		if (libro.getIdioma() != null && libro.getIdioma().length() > 4) {
 			Navegador.mostrarMensajeError(ventana, "Error", "El idioma debe de ser un código de hasta 3 letras");
 		}
     	return true;
@@ -123,21 +125,23 @@ public class Database {
     		return false;
     	}
     	
-    	if(autor.getSeudonimo() != null) {
-        	String sqlAutorID = "SELECT MAX(id) AS id FROM autor";
-    		try (Connection con = Database.conectar();
-    			 PreparedStatement stmtAutorID = con.prepareStatement(sqlAutorID)) {
-    			ResultSet rsAutorID = stmtAutorID.executeQuery();
-    			while (rsAutorID.next()) {
-    				if (autor.getSeudonimo() < 1 || autor.getSeudonimo() > rsAutorID.getInt("id")) {
-    					Navegador.mostrarMensajeError(ventana, "Error", "Error. Debes añadir un autor válido para el pseudónimo");
-    					return false;
-    				}
-    			}
-    		}
-    		catch (SQLException e) {
-    			e.printStackTrace();
-    		}
+    	if (autor.getSeudonimo() != null) {
+    		if(autor.getSeudonimo() != -1) {
+            	String sqlAutorID = "SELECT MAX(id) AS id FROM autor";
+        		try (Connection con = Database.conectar();
+        			 PreparedStatement stmtAutorID = con.prepareStatement(sqlAutorID)) {
+        			ResultSet rsAutorID = stmtAutorID.executeQuery();
+        			while (rsAutorID.next()) {
+        				if (autor.getSeudonimo() < 1 || autor.getSeudonimo() > rsAutorID.getInt("id")) {
+        					Navegador.mostrarMensajeError(ventana, "Error", "Error. Debes añadir un autor válido para el pseudónimo");
+        					return false;
+        				}
+        			}
+        		}
+        		catch (SQLException e) {
+        			e.printStackTrace();
+        		}
+        	}
     	}
     	
     	return true;

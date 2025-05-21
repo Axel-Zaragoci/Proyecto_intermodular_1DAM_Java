@@ -108,13 +108,17 @@ public class VentanaLibros extends JFrame {
 		exportButton.setBounds(264, 11, 117, 23);
 		importPanel.add(exportButton);
 		exportButton.addActionListener(e -> {
-			Libro temp = Libro.obtenerLibro((int) model.getValueAt(table.getSelectedRow(), 0));
-			if (LibroController.exportar(temp)) {
-				Navegador.mostrarMensajeInformacion(VentanaLibros.this, "Completado", "Libro exportado correctamente");
+			if (table.getSelectedRow() != -1) {
+				Libro temp = Libro.obtenerLibro((int) model.getValueAt(table.getSelectedRow(), 0));
+				if (LibroController.exportar(temp)) {
+					Navegador.mostrarMensajeInformacion(VentanaLibros.this, "Completado", "Libro exportado correctamente");
+				}
+				else {
+					Navegador.mostrarMensajeError(VentanaLibros.this, "Error", "Ha ocurrido un error");
+				}
+				return;
 			}
-			else {
-				Navegador.mostrarMensajeError(VentanaLibros.this, "Error", "Ha ocurrido un error");
-			}
+			Navegador.mostrarMensajeError(VentanaLibros.this, "Error", "Debes seleccionar un libro para exportarlo");
 		});
 
 		table.setDefaultEditor(Object.class, null);

@@ -55,7 +55,7 @@ public class AutorController {
 			stmt.setDate(2, time);
 			stmt.setString(3, autor.getNacionalidad());
 			stmt.setString(4, autor.isVivo()?"Vivo":"Fallecido");
-			if (autor.getSeudonimo() == null) {
+			if (autor.getSeudonimo() == -1) {
 				stmt.setObject(5, null);
 			}
 			else {

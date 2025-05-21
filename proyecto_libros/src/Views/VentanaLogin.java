@@ -1,5 +1,7 @@
 package Views;
 
+import java.awt.Font;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -35,6 +37,7 @@ public class VentanaLogin extends JFrame {
 		
 		JLabel titleLabel = new JLabel("Inicia sesión para continuar");
 		titleLabel.setBounds(10, 26, 232, 14);
+		titleLabel.setFont(new Font("Arial", Font.BOLD, 15));
 		panel.add(titleLabel);
 		
 		JLabel userLabel = new JLabel("Nombre de usuario:");

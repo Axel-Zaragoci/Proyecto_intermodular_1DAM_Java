@@ -21,21 +21,6 @@ public class Libro {
 	private String idioma;
 	private static ArrayList<Libro> libros = new ArrayList<>();
 	
-	public static Libro obtenerLibro(int id) {
-		for (Libro l : libros) {
-			if (l.id == id) {
-				return l;
-			}
-		}
-		return null;
-	}
-	
-	public static ArrayList<Libro> actualizarLista() {
-		libros = LibroController.ver();
-		libros.sort(Comparator.comparing(Libro::getId));
-		return libros;
-	}
-	
 	public Libro(String titulo, int editorial, Integer[] autor, Integer paginas, Integer publicacion, Double precio, Long isbn, String idioma) {
 		this.titulo = titulo;
 		this.editorial = editorial;
@@ -63,6 +48,19 @@ public class Libro {
 		this.isbn = isbn;
 		this.idioma = idioma;
 	}
+	
+	public static Libro obtenerLibro(int id) {
+		for (Libro l : libros) {
+			if (l.id == id) {
+				return l;
+			}
+		}
+		return null;
+	}
+	
+	public static ArrayList<Libro> actualizarLista() {
+		libros = LibroController.ver();
+		libros.sort(Comparator.comparing(Libro::getId));
+		return libros;
+	}
 }
-
-

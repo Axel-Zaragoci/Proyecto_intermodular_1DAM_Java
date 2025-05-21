@@ -212,7 +212,7 @@ public class VentanaLibrosActualizar extends JFrame {
 		yearTextField.setText(l.getPublicacion() + "");
 		costTextField.setText(l.getPrecio() + "");
 		isbnTextField.setText(l.getIsbn() + "");
-		codeTextField.setText(l.getIdioma() + "");
+		codeTextField.setText(l.getIdioma());
 		Integer[] autores = l.getAutor().toArray(new Integer[0]);
 		int[] autoresArr = new int[autores.length];
 		for (int i = 0; i < autores.length; i++) {

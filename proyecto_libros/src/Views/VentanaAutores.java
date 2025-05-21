@@ -71,7 +71,8 @@ public class VentanaAutores extends JFrame {
 				return;
 			}
 			catch (Exception ex) {
-			Navegador.mostrarMensajeError(VentanaAutores.this, "Error", "Selecciona el autor a actualizar");
+				ex.printStackTrace();
+				Navegador.mostrarMensajeError(VentanaAutores.this, "Error", "Selecciona el autor a actualizar");
 			}
 		});
 		
@@ -94,13 +95,17 @@ public class VentanaAutores extends JFrame {
 		exportButton.setBounds(268, 11, 119, 23);
 		panel_1.add(exportButton);
 		exportButton.addActionListener(e -> {
-			Autor temp = Autor.obtenerAutor((int) model.getValueAt(table.getSelectedRow(), 0));
-			if (AutorController.exportar(temp)) {
-				Navegador.mostrarMensajeInformacion(VentanaAutores.this, "Completado", "Autor exportado correctamente");
+			if (table.getSelectedRow() != -1) {
+				Autor temp = Autor.obtenerAutor((int) model.getValueAt(table.getSelectedRow(), 0));
+				if (AutorController.exportar(temp)) {
+					Navegador.mostrarMensajeInformacion(VentanaAutores.this, "Completado", "Autor exportado correctamente");
+				}
+				else {
+					Navegador.mostrarMensajeError(VentanaAutores.this, "Error", "Ha ocurrido un error");
+				}
+				return;
 			}
-			else {
-				Navegador.mostrarMensajeError(VentanaAutores.this, "Error", "Ha ocurrido un error");
-			}
+			Navegador.mostrarMensajeError(VentanaAutores.this, "Error", "Debes seleccionar un autor para exportarlo");
 		});
 		
 		JButton exportAll = new JButton("Exportar todo");
@@ -161,7 +166,7 @@ public class VentanaAutores extends JFrame {
 	public void eliminarAutor() {
 		int seleccionado = table.getSelectedRow();
 		if (seleccionado == -1) {
-			Navegador.mostrarMensajeError(this, "Error", "Debes seleccionar una o más líneas");
+			Navegador.mostrarMensajeError(this, "Error", "Debes seleccionar una línea");
 			return;
 		}
 		if (Navegador.mostrarMensajePregunta(this, "Confirmación", "Seguro que quieres eliminar el autor " + model.getValueAt(seleccionado, 1)) == JOptionPane.OK_OPTION) {

@@ -19,15 +19,6 @@ public class Editorial {
 	private String email;
 	private static ArrayList<Editorial> editoriales = new ArrayList<>();
 	
-	public static Editorial obtenerEditorial(int id) {
-		for (Editorial e : editoriales) {
-			if (e.id == id) {
-				return e;
-			}
-		}
-		return null;
-	}
-	
 	public Editorial(String nombre, String pais, String ciudad, Integer anoFundacion, long telefono, String email) {
 		this.nombre = nombre;
 		this.pais = pais;
@@ -45,6 +36,15 @@ public class Editorial {
 		this.anoFundacion = anoFundacion;
 		this.telefono = telefono;
 		this.email = email;
+	}
+	
+	public static Editorial obtenerEditorial(int id) {
+		for (Editorial e : editoriales) {
+			if (e.id == id) {
+				return e;
+			}
+		}
+		return null;
 	}
 	
 	public static ArrayList<Editorial> actualizarLista() {

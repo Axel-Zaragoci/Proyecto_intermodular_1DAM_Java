@@ -37,11 +37,8 @@ public class VentanaPrincipal extends JFrame {
 		tituloLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(tituloLabel);		
 		
-		Font fuenteButton = new Font("Arial", Font.BOLD, 14);
-		
 		JButton LibroButton = new JButton("Libros");
 		LibroButton.setBounds(10, 120, 110, 27);
-		LibroButton.setFont(fuenteButton);
 		panel.add(LibroButton);
 		LibroButton.addActionListener(e -> {
 				VentanaLibros v = new VentanaLibros();
@@ -53,7 +50,6 @@ public class VentanaPrincipal extends JFrame {
 		
 		JButton AutoresButton = new JButton("Autores");
 		AutoresButton.setBounds(157, 120, 110, 27);
-		AutoresButton.setFont(fuenteButton);
 		panel.add(AutoresButton);
 		AutoresButton.addActionListener(e -> {
 				VentanaAutores v = new VentanaAutores();
@@ -65,7 +61,6 @@ public class VentanaPrincipal extends JFrame {
 		
 		JButton EditorialButton = new JButton("Editoriales");
 		EditorialButton.setBounds(298, 120, 110, 27);
-		EditorialButton.setFont(fuenteButton);
 		panel.add(EditorialButton);
 		EditorialButton.addActionListener(e -> {
 				VentanaEditoriales v = new VentanaEditoriales();

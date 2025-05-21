@@ -87,8 +87,7 @@ public class LibroController {
 	
 	public static ArrayList<Libro> ver() {
 		ArrayList<Libro> libros = new ArrayList<>();
-		try {
-			Connection con = Database.conectar();
+		try (Connection con = Database.conectar();) {
 			String sqlLibro = "SELECT l.id, l.titulo, e.editorial, l.paginas, l.ano_publicacion, e.precio, e.isbn, e.idioma FROM libro l, editar e WHERE l.id = e.libro";
 			PreparedStatement stmtLibro = con.prepareStatement(sqlLibro);
 			ResultSet rs = stmtLibro.executeQuery();
@@ -107,7 +106,6 @@ public class LibroController {
 				}
 				
 				Libro libro = new Libro(libroID, rs.getString("titulo"), rs.getInt("editorial"), autores.toArray(new Integer[0]),rs.getInt("paginas"), rs.getInt("ano_publicacion"), rs.getDouble("precio"), rs.getLong("isbn"), rs.getString("idioma"));
-				libro.setAutor(autores);
 				libros.add(libro);
 			}
 		} catch (SQLException ex) {
@@ -121,11 +119,17 @@ public class LibroController {
 	    try {
 	        con.setAutoCommit(false);
 
-	        String sqlLibro = "UPDATE libro SET titulo = ?, paginas = ? WHERE id = ?";
+	        String sqlLibro = "UPDATE libro SET titulo = ?, paginas = ?, ano_publicacion = ? WHERE id = ?";
 	        PreparedStatement stmtLibro = con.prepareStatement(sqlLibro);
 	        stmtLibro.setString(1, libro.getTitulo());
 	        stmtLibro.setInt(2, libro.getPaginas());
-	        stmtLibro.setInt(3, libro.getId());
+	        if (libro.getPublicacion() == null) {
+	        	stmtLibro.setObject(3, null);
+	        }
+	        else {
+	        	stmtLibro.setInt(3, libro.getPublicacion());
+	        }
+	        stmtLibro.setInt(4, libro.getId());
 	        stmtLibro.executeUpdate();
 	        
 	        String sqlEditar = "UPDATE editar SET editorial = ?, precio = ?, isbn = ?, idioma = ? WHERE libro = ? ";
@@ -191,9 +195,9 @@ public class LibroController {
 		return true;
 	}
 
-		public static boolean exportar(Libro l) {
+	public static boolean exportar(Libro l) {
 		try {
-			BufferedWriter buffer = new BufferedWriter(new FileWriter(new File (FilesController.obtenerRuta(Navegador.obtenerVentana("Editorial"))), true));
+			BufferedWriter buffer = new BufferedWriter(new FileWriter(new File (FilesController.obtenerRuta(Navegador.obtenerVentana("Libros"))), true));
 			buffer.write(l.getId() + "");
 			buffer.write("|");
 			buffer.write(l.getTitulo());
@@ -228,7 +232,7 @@ public class LibroController {
 
 	public static boolean exportarTodo() {
 		try {
-			BufferedWriter buffer = new BufferedWriter(new FileWriter(new File (FilesController.obtenerRuta(Navegador.obtenerVentana("Autores")))));
+			BufferedWriter buffer = new BufferedWriter(new FileWriter(new File (FilesController.obtenerRuta(Navegador.obtenerVentana("Libros")))));
 			for (Libro l : Libro.actualizarLista()) {
 				buffer.write(l.getId() + "");
 				buffer.write("|");
@@ -264,7 +268,7 @@ public class LibroController {
 	}
 
 	public static boolean importar() {
-		Path file = Path.of(FilesController.obtenerRuta(Navegador.obtenerVentana("Editoriales")));
+		Path file = Path.of(FilesController.obtenerRuta(Navegador.obtenerVentana("Libros")));
 		
 		try (Stream<String> lineas = Files.lines(file)) {
 			lineas.forEach(l -> {
@@ -297,11 +301,11 @@ public class LibroController {
 			return true;
 		}
 		catch (IOException ex) {
-			Navegador.mostrarMensajeError(Navegador.obtenerVentana("Editorial"), "Error", "Ha ocurrido un error al interactuar con el archivo");
+			Navegador.mostrarMensajeError(Navegador.obtenerVentana("Libros"), "Error", "Ha ocurrido un error al interactuar con el archivo");
 			ex.printStackTrace();
 		}
 		catch (Exception ex) {
-			Navegador.mostrarMensajeError(Navegador.obtenerVentana("Editorial"), "Error", "Uno de los datos ha sido modificado y es inválido");
+			Navegador.mostrarMensajeError(Navegador.obtenerVentana("Libros"), "Error", "Uno de los datos ha sido modificado y es inválido");
 			ex.printStackTrace();
 		}
 		return false;

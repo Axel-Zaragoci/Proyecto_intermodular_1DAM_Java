@@ -195,10 +195,17 @@ public class VentanaAutoresActualizar extends JFrame {
 	public void setDatos(Autor a) {
 		id = a.getId();
 		nameTextField.setText(a.getNombre());
-		String[] date = a.getFechaNacimiento().split("-");
-		yearTextField.setText(date[0]);
-		monthTextField.setText(date[1]);
-		dayTextField.setText(date[2]);
+		if (a.getFechaNacimiento() != null) {
+			String[] date = a.getFechaNacimiento().split("-");
+			yearTextField.setText(date[0]);
+			monthTextField.setText(date[1]);
+			dayTextField.setText(date[2]);
+		}
+		else {
+			yearTextField.setText(null);
+			monthTextField.setText(null);
+			dayTextField.setText(null);
+		}
 		nationTextField.setText(a.getNacionalidad());
 		liveCheckBox.setSelected(a.isVivo());
 		SeudoList.setSelectedIndex(a.getSeudonimo()-1);

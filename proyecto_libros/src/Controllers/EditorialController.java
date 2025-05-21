@@ -122,7 +122,7 @@ public class EditorialController {
 
 	public static boolean exportar(Editorial e) {
 		try {
-			BufferedWriter buffer = new BufferedWriter(new FileWriter(new File (FilesController.obtenerRuta(Navegador.obtenerVentana("Editorial"))), true));
+			BufferedWriter buffer = new BufferedWriter(new FileWriter(new File (FilesController.obtenerRuta(Navegador.obtenerVentana("Editoriales"))), true));
 			buffer.write(e.getId() + "");
 			buffer.write("|");
 			buffer.write(e.getNombre());
@@ -149,7 +149,7 @@ public class EditorialController {
 
 	public static boolean exportarTodo() {
 		try {
-			BufferedWriter buffer = new BufferedWriter(new FileWriter(new File (FilesController.obtenerRuta(Navegador.obtenerVentana("Autores")))));
+			BufferedWriter buffer = new BufferedWriter(new FileWriter(new File (FilesController.obtenerRuta(Navegador.obtenerVentana("Editoriales")))));
 			for (Editorial e : Editorial.actualizarLista()) {
 				buffer.write(e.getId() + "");
 				buffer.write("|");
