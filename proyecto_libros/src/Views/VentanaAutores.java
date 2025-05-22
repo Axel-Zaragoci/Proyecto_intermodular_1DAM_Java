@@ -71,7 +71,6 @@ public class VentanaAutores extends JFrame {
 				return;
 			}
 			catch (Exception ex) {
-				ex.printStackTrace();
 				Navegador.mostrarMensajeError(VentanaAutores.this, "Error", "Selecciona el autor a actualizar");
 			}
 		});

@@ -20,3 +20,9 @@ Thumbs.db
 # Archivos de entorno
 .env
 /.metadata/
+
+# Ignorar archivos .txt en la carpeta data
+/proyecto_libros/data/*.txt
+
+# Ignorar el archivo de memoria
+/Memoria.docx

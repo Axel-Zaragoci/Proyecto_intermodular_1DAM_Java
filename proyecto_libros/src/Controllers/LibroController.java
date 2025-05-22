@@ -271,6 +271,7 @@ public class LibroController {
 		Path file = Path.of(FilesController.obtenerRuta(Navegador.obtenerVentana("Libros")));
 		
 		try (Stream<String> lineas = Files.lines(file)) {
+			ArrayList<Libro> libros = new ArrayList<>();
 			lineas.forEach(l -> {
 				String[] data = l.split("\\|", -1);
 				int[] autoresStream = Arrays.stream(data[3].split(",")).mapToInt(e -> Integer.parseInt(e)).toArray();
@@ -288,16 +289,13 @@ public class LibroController {
 				Long.parseLong(data[7]), 
 				data[8]);
 				if (Database.revisarLibro(temp, Navegador.obtenerVentana("Libros"))) {
-					try {
-						LibroController.crearLibro(temp);
-					} catch (SQLException e1) {
-						Navegador.mostrarMensajeError(Navegador.obtenerVentana("Libros"), "Error", "Ha ocurrido un error de conexión con la base de datos");
-					}
+					libros.add(temp);
 				}
 				else {
 					return;
 				}
 			});
+			crearMultiples(libros);
 			return true;
 		}
 		catch (IOException ex) {
@@ -309,5 +307,74 @@ public class LibroController {
 			ex.printStackTrace();
 		}
 		return false;
+	}
+	
+	public static boolean crearMultiples(ArrayList<Libro> lista) {
+	    try (Connection con = Database.conectar()) {
+	        con.setAutoCommit(false);
+	        
+	        for (Libro libro : lista) {
+	            String sqlBusqueda = "SELECT id FROM libro WHERE titulo = ? AND ano_publicacion = ? AND paginas = ?";
+	            int libroID;
+	            
+	            try (PreparedStatement stmtBusqueda = con.prepareStatement(sqlBusqueda)) {
+	                stmtBusqueda.setString(1, libro.getTitulo());
+	                stmtBusqueda.setInt(2, libro.getPublicacion());
+	                stmtBusqueda.setInt(3, libro.getPaginas());
+	                
+	                ResultSet rsBusqueda = stmtBusqueda.executeQuery();
+	                
+	                if(rsBusqueda.next()) {
+	                    libroID = rsBusqueda.getInt("id");
+	                } else {
+	                    String sqlInsertLibro = "INSERT INTO libro (titulo, paginas, ano_publicacion) VALUES (?, ?, ?) RETURNING ID";
+	                    try (PreparedStatement stmtInsertLibro = con.prepareStatement(sqlInsertLibro)) {
+	                        stmtInsertLibro.setString(1, libro.getTitulo());
+	                        stmtInsertLibro.setInt(2, libro.getPaginas());
+	                        stmtInsertLibro.setInt(3, libro.getPublicacion());
+	                        
+	                        ResultSet rsInsertLibro = stmtInsertLibro.executeQuery();
+	                        
+	                        if (rsInsertLibro.next()) {
+	                            libroID = rsInsertLibro.getInt("id");
+	                        } else {
+	                            throw new SQLException("No se pudo insertar el libro");
+	                        }
+	                    }
+	                }
+	            }
+	            
+	            try (PreparedStatement stmtInsertEditar = con.prepareStatement(
+	                "INSERT INTO editar (libro, editorial, precio, isbn, idioma) VALUES (?, ?, ?, ?, ?)")) {
+	                stmtInsertEditar.setInt(1, libroID);
+	                stmtInsertEditar.setInt(2, libro.getEditorial());
+	                stmtInsertEditar.setDouble(3, libro.getPrecio());
+	                stmtInsertEditar.setLong(4, libro.getIsbn());
+	                stmtInsertEditar.setString(5, libro.getIdioma());
+	                stmtInsertEditar.execute();
+	            }
+	            
+	            try (PreparedStatement stmtDeleteEscribir = con.prepareStatement(
+	                "DELETE FROM escribir WHERE libro = ?")) {
+	                stmtDeleteEscribir.setInt(1, libroID);
+	                stmtDeleteEscribir.execute();
+	            }
+	            
+	            try (PreparedStatement stmtInsertEscribir = con.prepareStatement(
+	                "INSERT INTO escribir (libro, autor) VALUES (?, ?)")) {
+	                for (int autor : libro.getAutor()) {
+	                    stmtInsertEscribir.setInt(1, libroID);
+	                    stmtInsertEscribir.setInt(2, autor);
+	                    stmtInsertEscribir.addBatch();
+	                }
+	                stmtInsertEscribir.executeBatch();
+	            }
+	        }
+	        con.commit();
+	        return true;
+	    } catch (SQLException ex) {
+	        ex.printStackTrace();
+	        return false;
+	    }
 	}
 }

@@ -225,7 +225,7 @@ public class VentanaLibrosCrear extends JFrame {
 			try {
 				LibroController.crearLibro(temp);
 			} catch (SQLException e1) {
-				e1.printStackTrace();
+				Navegador.mostrarMensajeError(VentanaLibrosCrear.this, "Error", "Ha ocurrido un error");
 			}
 			Navegador.mostrarMensajeInformacion(VentanaLibrosCrear.this, "Completado", "Libro creado");
 			limpiar();

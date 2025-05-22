@@ -181,16 +181,18 @@ public class EditorialController {
 		Path file = Path.of(FilesController.obtenerRuta(Navegador.obtenerVentana("Editoriales")));
 		
 		try (Stream<String> lineas = Files.lines(file)) {
+			ArrayList<Editorial> editoriales = new ArrayList<>();
 			lineas.forEach(l -> {
 				String[] data = l.split("\\|", -1);
 				Editorial temp = new Editorial(Integer.parseInt(data[0]), data[1], data[2], data[3], Integer.parseInt(data[4]), Long.parseLong((data[5].equals("") ? "0" : data[5])), data[6]);
 				if (Database.revisarEditorial(temp, Navegador.obtenerVentana("Editoriales"))) {
-					EditorialController.crear(temp);
+					editoriales.add(temp);
 				}
 				else {
 					return;
 				}
 			});
+			crearMultiples(editoriales);
 			return true;
 		}
 		catch (IOException ex) {
@@ -202,5 +204,48 @@ public class EditorialController {
 			ex.printStackTrace();
 		}
 		return false;
+	}
+	
+	public static boolean crearMultiples(ArrayList<Editorial> editoriales) {
+		String sql = "SELECT * FROM editorial";
+		try (Connection con = Database.conectar();) {
+			for (Editorial editorial : editoriales) {
+				Statement selectStmt = con.createStatement();
+				ResultSet rs = selectStmt.executeQuery(sql);
+				
+				boolean exist = false;
+				while (rs.next()) {
+					Integer ano = editorial.getAnoFundacion() == null ? 0 : editorial.getAnoFundacion();
+					if (rs.getString("nombre").equalsIgnoreCase(editorial.getNombre()) && rs.getString("pais").equalsIgnoreCase(editorial.getPais()) && rs.getLong("telefono") == editorial.getTelefono() && rs.getString("email").equalsIgnoreCase(editorial.getEmail()) && rs.getString("ciudad").equalsIgnoreCase(editorial.getCiudad()) && rs.getInt("ano_fundacion") == ano) {
+						exist = true;
+					}
+				}
+				
+				if (!exist) {
+					String sqlInsert = "INSERT INTO editorial (nombre, pais, telefono, email, ciudad, ano_fundacion) VALUES (?, ?, ?, ?, ?, ?);";
+					PreparedStatement stmt = con.prepareStatement(sqlInsert);
+					stmt.setString(1, editorial.getNombre());
+					stmt.setString(2, editorial.getPais());
+					stmt.setString(3, editorial.getTelefono() == 0 ? null : editorial.getTelefono()+"");
+					stmt.setString(4, editorial.getEmail());
+					stmt.setString(5, editorial.getCiudad());;
+					if (editorial.getAnoFundacion() == null) {
+						stmt.setObject(6, null);
+					}
+					else {
+						stmt.setObject(6, editorial.getAnoFundacion(), java.sql.Types.INTEGER);
+					}
+					
+					stmt.execute();
+				}
+				else {
+					Navegador.mostrarMensajeError(Navegador.obtenerVentana("Crear editorial"), "Error", "Ya existe una editorial con estos datos");
+				}
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return true;
 	}
 }

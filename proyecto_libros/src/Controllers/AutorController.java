@@ -55,7 +55,7 @@ public class AutorController {
 			stmt.setDate(2, time);
 			stmt.setString(3, autor.getNacionalidad());
 			stmt.setString(4, autor.isVivo()?"Vivo":"Fallecido");
-			if (autor.getSeudonimo() == -1) {
+			if (autor.getSeudonimo() == null || autor.getSeudonimo() == -1) {
 				stmt.setObject(5, null);
 			}
 			else {
@@ -208,29 +208,98 @@ public class AutorController {
 	}
 
 	public static boolean importar() {
-		Path file = Path.of(FilesController.obtenerRuta(Navegador.obtenerVentana("Autores")));
-		
-		try (Stream<String> lineas = Files.lines(file)) {
-			lineas.forEach(l -> {
-				String[] data = l.split("\\|");
-				Autor temp = new Autor(Integer.parseInt(data[0]), data[1], data[2].equals("") ? null : data[2], data[3], (data[4].equals("true") ? true : false), (Integer.parseInt(data[5]) == 0 ? null : Integer.parseInt(data[5])));
-				if (Database.revisarAutor(temp, Navegador.obtenerVentana("Autores"))) {
-					AutorController.crear(temp);
+	    Path file = Path.of(FilesController.obtenerRuta(Navegador.obtenerVentana("Autores")));
+	    
+	    try (Stream<String> lineas = Files.lines(file)) {
+	        ArrayList<Autor> autores = new ArrayList<>();
+	        
+	        for (String linea : lineas.toList()) {
+	            String[] data = linea.split("\\|", -1);
+	            Autor temp = new Autor(
+	                Integer.parseInt(data[0]), 
+	                data[1], 
+	                data[2].equals("") ? null : data[2], 
+	                data[3], 
+	                data[4].equals("true"), 
+	                data[5].equals("0") ? null : Integer.parseInt(data[5])
+	            );
+	            
+	            if (!Database.revisarAutor(temp, Navegador.obtenerVentana("Autores"))) {
+	                Navegador.mostrarMensajeError(
+	                    Navegador.obtenerVentana("Autores"), 
+	                    "Error", 
+	                    "Uno de los datos ha sido modificado y es inválido"
+	                );
+	                return false;
+	            }
+	            autores.add(temp);
+	        }
+	        
+	        return crearMultiples(autores);
+	    } 
+	    catch (IOException ex) {
+	        Navegador.mostrarMensajeError(Navegador.obtenerVentana("Autores"), "Error", "Ha ocurrido un error al interactuar con el archivo");
+	        ex.printStackTrace();
+	        return false;
+	    }
+	    catch (Exception ex) {
+	        Navegador.mostrarMensajeError(Navegador.obtenerVentana("Autores"), "Error", "Uno de los datos ha sido modificado y es inválido");
+	        ex.printStackTrace();
+	        return false;
+	    }
+	}
+	
+	public static boolean crearMultiples(ArrayList<Autor> autores) {
+		try (Connection con = Database.conectar();) {
+			for (Autor autor : autores) {
+				boolean existir = false;
+				String sqlBusqueda = "SELECT id FROM autor WHERE nombre = ? AND fecha_nacimiento = ? AND nacionalidad = ? AND estado = ? AND seudonimo = ?";
+				PreparedStatement stmtBusqueda = con.prepareStatement(sqlBusqueda);
+				stmtBusqueda.setString(1, autor.getNombre());
+				java.sql.Date time = autor.getFechaNacimiento() == null ? null : Date.valueOf(autor.getFechaNacimiento());
+				stmtBusqueda.setDate(2, time);
+				stmtBusqueda.setString(3, autor.getNacionalidad());
+				stmtBusqueda.setString(4, autor.isVivo() ? "Vivo" : "Fallecido");
+				if (autor.getSeudonimo() == null) {
+					stmtBusqueda.setObject(5, null);
 				}
 				else {
-					return;
+					stmtBusqueda.setObject(5, autor.getSeudonimo(), java.sql.Types.INTEGER);
 				}
-			});
+				
+				ResultSet rsBusqueda = stmtBusqueda.executeQuery();			
+				if(rsBusqueda.next()) {
+					existir = true;
+				}
+				
+				if (!existir) {
+					String sql = "INSERT INTO autor (nombre, fecha_nacimiento, nacionalidad, estado, seudonimo) VALUES (?, ?, ?, ?, ?);";
+					PreparedStatement stmt = con.prepareStatement(sql);
+							
+					stmt.setString(1, autor.getNombre());
+					java.sql.Date timer = autor.getFechaNacimiento() == null ? null : Date.valueOf(autor.getFechaNacimiento());
+					stmt.setDate(2, timer);
+					stmt.setString(3, autor.getNacionalidad());
+					stmt.setString(4, autor.isVivo()?"Vivo":"Fallecido");
+					if (autor.getSeudonimo() == null || autor.getSeudonimo() == -1) {
+						stmt.setObject(5, null);
+					}
+					else {
+						stmt.setObject(5, autor.getSeudonimo(), java.sql.Types.INTEGER);
+					}
+					
+					stmt.execute();
+				}
+				
+				if (Navegador.obtenerVentana("Crear autor") != null) {
+					((VentanaAutoresCrear) Navegador.obtenerVentana("Crear autor")).actualizarLista();
+				}
+			}
 			return true;
 		}
-		catch (IOException ex) {
-			Navegador.mostrarMensajeError(Navegador.obtenerVentana("Autores"), "Error", "Ha ocurrido un error al interactuar con el archivo");
+		catch (SQLException ex) {
 			ex.printStackTrace();
+			return false;
 		}
-		catch (Exception ex) {
-			Navegador.mostrarMensajeError(Navegador.obtenerVentana("Autores"), "Error", "Uno de los datos ha sido modificado y es inválido");
-			ex.printStackTrace();
-		}
-		return false;
 	}
 }

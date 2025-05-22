@@ -175,7 +175,7 @@ public class VentanaLibrosActualizar extends JFrame {
 				try {
 					LibroController.actualizarLibro(temp);
 				} catch (SQLException e1) {
-					e1.printStackTrace();
+					Navegador.mostrarMensajeError(VentanaLibrosActualizar.this, "Error", "Ha ocurrido un error");
 				}
 				Navegador.mostrarMensajeInformacion(VentanaLibrosActualizar.this, "Completado", "Libro actualizado");
 				cerrar();

@@ -47,6 +47,7 @@ public class Database {
         		return false;
         	}
     	}
+    	
     	String sqlAutorID = "SELECT MAX(id) AS id FROM autor";
 		try (Connection con = Database.conectar();
 			 PreparedStatement stmtAutorID = con.prepareStatement(sqlAutorID)) {
@@ -62,17 +63,11 @@ public class Database {
 							Navegador.mostrarMensajeError(ventana, "Error", "El autor indicado no existe. Indica uno existente o crea un nuevo autor antes de añadir el libro");
 							return false;
 						}
-				}
+					}
 				}
 			}
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-    	String sqlEditorialID = "SELECT MAX(id) AS id FROM autor";
-		try (Connection con = Database.conectar();
-			 PreparedStatement stmtEditorialID = con.prepareStatement(sqlEditorialID)) {
+			String sqlEditorialID = "SELECT MAX(id) AS id FROM editorial";
+			PreparedStatement stmtEditorialID = con.prepareStatement(sqlEditorialID);
 			ResultSet rsEditorialID = stmtEditorialID.executeQuery();
 			while (rsEditorialID.next()) {
 				if (libro.getEditorial() < 1 || libro.getEditorial() > rsEditorialID.getInt("id")) {
@@ -126,13 +121,13 @@ public class Database {
     	}
     	
     	if (autor.getSeudonimo() != null) {
-    		if(autor.getSeudonimo() != -1) {
+    		if(autor.getSeudonimo() > 0) {
             	String sqlAutorID = "SELECT MAX(id) AS id FROM autor";
         		try (Connection con = Database.conectar();
         			 PreparedStatement stmtAutorID = con.prepareStatement(sqlAutorID)) {
         			ResultSet rsAutorID = stmtAutorID.executeQuery();
         			while (rsAutorID.next()) {
-        				if (autor.getSeudonimo() < 1 || autor.getSeudonimo() > rsAutorID.getInt("id")) {
+        				if (autor.getSeudonimo() > rsAutorID.getInt("id")) {
         					Navegador.mostrarMensajeError(ventana, "Error", "Error. Debes añadir un autor válido para el pseudónimo");
         					return false;
         				}
